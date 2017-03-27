@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import trypLayerPanels.*;
 
 public class LayerEdit implements ActionListener, ChangeListener, ListSelectionListener
 {
@@ -22,6 +23,8 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
     JScrollPane JS_LayerScroll;
     
     JList JLS_LayerList;
+    
+    AbstractLayerPanel LayerPanel;
     
     JButton[] buttons;
     
@@ -69,6 +72,17 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         c.gridy=1;
         
         JF_LayerFrame.add(JL_Palette, c);
+        
+        LayerPanel = new CircularLayerPanel();
+        LayerPanel.initGUI();
+        
+        c.gridx=1;
+        c.gridy=2;
+        c.gridwidth=3;
+        
+        JF_LayerFrame.add(LayerPanel, c);
+        
+        c.gridwidth=1;
         
         JC_Type=new JComboBox();
         JC_Palette = new JComboBox();
