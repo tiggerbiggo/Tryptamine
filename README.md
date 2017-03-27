@@ -1,2 +1,5 @@
 # Tryptamine
-Open source Java based animated image creation tool
+
+Tryptamine is an open source, java based animated image creation tool.
+
+TODO: Add more detailed description
