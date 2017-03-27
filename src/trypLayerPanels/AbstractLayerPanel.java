@@ -15,4 +15,6 @@ import trypParams.Parameter;
 public abstract class AbstractLayerPanel extends JPanel
 {
     public abstract Parameter[] getParams();
+    
+    public abstract void initGUI();
 }
