@@ -9,7 +9,7 @@ import tryptamine.DynamicCanvas;
  *
  * @author timot_000
  */
-public class Gen_Formula extends Generator
+public class Gen_Formula extends AbstractGenerator
 {
     
     boolean HV;
@@ -29,7 +29,7 @@ public class Gen_Formula extends Generator
     
     
     @Override
-    public DynamicCanvas draw(DynamicCanvas DC) 
+    public DynamicCanvas draw(DynamicCanvas DC, int PaletteNum) 
     {
         
         int startPos, maxPos;
@@ -37,30 +37,28 @@ public class Gen_Formula extends Generator
         else maxPos = DC.getX();
         
         
-        if(!dir) colorSpeed = colorSpeed*-1;
+        if(!dir) colorSpeed = Math.abs(colorSpeed)*-1; //Squished :)
         int n=0;
         int c=0;
         for(int i=0; i<maxPos; i++)
         {
             startPos=(int)Math.round(F.recursiveCalc(i));
             
+            
+            
             if(n>=gaps.length)
             {
-                c=0;
                 n=0;
-                
             }
-            if(gaps[n] >=1)
+            if(c>=gaps[n])
             {
-                gaps[n]-=1;
-                c+=1;
+                c=0;
+                n++;
+                DC = lineDraw(DC, HV, colorSpeed, i, startPos, PaletteNum);
             }
             else
             {
-                gaps[n]=c;
-                c=0;
-                n++;
-                DC = lineDraw(DC, HV, colorSpeed, i, startPos);
+                c++;
             }
         }
         return DC;

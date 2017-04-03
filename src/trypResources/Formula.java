@@ -74,7 +74,7 @@ public class Formula
 				case ENCLOSE:
                                     //System.out.println("ENCLOSE");
                                     return basicCalc(next.recursiveCalc(val));
-                                case EXPONENT:
+                                case POWER:
                                     //System.out.println("EXPONENT");
                                     return Math.pow(basicCalc(val),next.recursiveCalc(val));
 				default:
