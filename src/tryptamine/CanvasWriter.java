@@ -7,29 +7,39 @@ import trypResources.Function;
 
 public class CanvasWriter 
 {
-    Generator[] gens;
+    AbstractGenerator[] gens;
     
-    public DynamicCanvas draw(DynamicCanvas DC)
+    public DynamicCanvas draw(DynamicCanvas DC, int[] PaletteNums)
     {
-        
-        
-        for(Generator G : gens)
+        if(gens != null && 
+                PaletteNums != null && 
+                PaletteNums.length==gens.length)
         {
-            DC = G.draw(DC);
+            for(int i=0; i<gens.length; i++)
+            {
+                DC = gens[i].draw(DC, PaletteNums[i]);
+            }
+        }
+        
+        
+        return DC;
+    }
+    
+    public static DynamicCanvas draw(DynamicCanvas DC, AbstractGenerator[] gens, int[] PaletteNums)
+    {
+        if(gens != null && 
+                PaletteNums != null && 
+                PaletteNums.length==gens.length)
+        {
+            for(int i=0; i<gens.length; i++)
+            {
+                DC = gens[i].draw(DC, PaletteNums[i]);
+            }
         }
         return DC;
     }
     
-    public static DynamicCanvas draw(DynamicCanvas DC, Generator[] gens)
-    {
-        for(Generator G : gens)
-        {
-            DC = G.draw(DC);
-        }
-        return DC;
-    }
-    
-    public void setGenerators(Generator[] gens)
+    public void setGenerators(AbstractGenerator[] gens)
     {
         this.gens = gens;
     }

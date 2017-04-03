@@ -6,7 +6,7 @@
 package trypResources;
 
 import trypGenerators.GenType;
-import trypGenerators.Generator;
+import trypGenerators.AbstractGenerator;
 import trypParams.Parameter;
 
 /**
@@ -15,7 +15,7 @@ import trypParams.Parameter;
  */
 public class Layer 
 {
-    Generator gen;
+    AbstractGenerator gen;
     Parameter[] params;
     GenType type;
 

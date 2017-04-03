@@ -7,7 +7,7 @@ public enum Operation
 	MULTIPLY, //sin(x)*cos(x)
 	DIVIDE, //sin(x)/cos(x)
 	ENCLOSE, //sin(cos(x))
-        EXPONENT // sin(x)^cos(x)
+        POWER // sin(x)^cos(x)
 }
 
 //Add, Subtract, Multiply and divide are self explanatory.

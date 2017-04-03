@@ -13,7 +13,7 @@ import tryptamine.DynamicCanvas;
  *
  * @author timot_000
  */
-public class Gen_SimpleLines extends Generator
+public class Gen_SimpleLines extends AbstractGenerator
 {
     boolean HV;
     boolean dir;
@@ -33,7 +33,7 @@ public class Gen_SimpleLines extends Generator
     }
     
     @Override
-    public DynamicCanvas draw(DynamicCanvas DC) 
+    public DynamicCanvas draw(DynamicCanvas DC, int PaletteNum) 
     {
         int startPos, maxPos;
         if(HV) maxPos = DC.getY();
@@ -61,7 +61,7 @@ public class Gen_SimpleLines extends Generator
                 gaps[n]=c;
                 c=0;
                 n++;
-                DC = lineDraw(DC, HV, colorSpeed, i, startPos);
+                DC = lineDraw(DC, HV, colorSpeed, i, startPos, PaletteNum);
                 System.out.println("DREW");
             }
         }

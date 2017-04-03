@@ -53,7 +53,7 @@ class Vector
  *
  * @author amnesia
  */
-public class Gen_Circular extends Generator
+public class Gen_Circular extends AbstractGenerator
 {
 
     int r, x, y;
@@ -68,11 +68,11 @@ public class Gen_Circular extends Generator
     }
     
     @Override
-    public DynamicCanvas draw(DynamicCanvas DC) 
+    public DynamicCanvas draw(DynamicCanvas DC, int PaletteNum) 
     {
         for(int i=0; i<=r; i++)
         {
-            DC=drawCircle(DC, x, y, i, 0);
+            DC=drawCircle(DC, x, y, i, PaletteNum);
         }
         return DC;
     }
@@ -132,7 +132,7 @@ public class Gen_Circular extends Generator
         return DC;
     }
     
-    public DynamicCanvas drawCircle(DynamicCanvas DC, int x0, int y0, int radius, int paletteIndex)
+    public DynamicCanvas drawCircle(DynamicCanvas DC, int x0, int y0, int radius, int PaletteNum)
     {
         int x1=radius;
         int y1=0;
@@ -140,14 +140,14 @@ public class Gen_Circular extends Generator
         int count=0;
         while(x1>=y1)
         {
-            DC.draw(x0+x1,y0+y1, paletteIndex, DC.normalize(count/2, 0));
-            DC.draw(x0+y1,y0+x1, paletteIndex, DC.normalize(count, 0));
-            DC.draw(x0-y1,y0+x1, paletteIndex, DC.normalize(count/2, 0));
-            DC.draw(x0-x1,y0+y1, paletteIndex, DC.normalize(count, 0));
-            DC.draw(x0-x1,y0-y1, paletteIndex, DC.normalize(count/2, 0));
-            DC.draw(x0-y1,y0-x1, paletteIndex, DC.normalize(count, 0));
-            DC.draw(x0+y1,y0-x1, paletteIndex, DC.normalize(count/2, 0));
-            DC.draw(x0+x1,y0-y1, paletteIndex, DC.normalize(count, 0));
+            DC.draw(x0+x1,y0+y1, PaletteNum, DC.normalize(count/2, 0));
+            DC.draw(x0+y1,y0+x1, PaletteNum, DC.normalize(count, 0));
+            DC.draw(x0-y1,y0+x1, PaletteNum, DC.normalize(count/2, 0));
+            DC.draw(x0-x1,y0+y1, PaletteNum, DC.normalize(count, 0));
+            DC.draw(x0-x1,y0-y1, PaletteNum, DC.normalize(count/2, 0));
+            DC.draw(x0-y1,y0-x1, PaletteNum, DC.normalize(count, 0));
+            DC.draw(x0+y1,y0-x1, PaletteNum, DC.normalize(count/2, 0));
+            DC.draw(x0+x1,y0-y1, PaletteNum, DC.normalize(count, 0));
             
             //System.out.println("Drew circle part " + count);
             

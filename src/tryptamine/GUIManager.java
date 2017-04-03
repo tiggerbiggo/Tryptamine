@@ -9,7 +9,7 @@ import trypGUI.*;
 import trypGenerators.Gen_Circular;
 import trypGenerators.Gen_Formula;
 import trypGenerators.Gen_SimpleLines;
-import trypGenerators.Generator;
+import trypGenerators.AbstractGenerator;
 import trypParams.Parameter;
 import trypResources.*;
 
@@ -28,6 +28,7 @@ public class GUIManager implements ActionListener {
     LayerEdit LE = new LayerEdit();
     
     Palette[] P;
+    int[] PaletteNums;
 
     int code = 0;
 
@@ -45,40 +46,56 @@ public class GUIManager implements ActionListener {
     public synchronized void show() 
     {
         
+        int PLength = 40;
         
         P = new Palette[2];
-        P[0]=new Palette(100,0);
+        P[0]=new Palette(PLength,0);
         
-        P[0].setGradient(0, 99, Color.blue, Color.white);
+        P[0].setGradient(0, PLength-1, Color.blue, Color.white);
         
-        P[1] = new Palette(25, 0);
-        P[1].setGradient(0, 24, Color.black, Color.green);
+        P[1] = new Palette(PLength, 0);
+        P[1].setGradient(0, PLength-1, Color.black, Color.green);
         
         DynamicCanvas DC = new DynamicCanvas(500, 500, P);
         
-        int[][] gaps = {{2}, {1}};
+        int[][] gaps = {{0}, {1}};
         
         Formula F = new Formula(
                 Function.COS, 
                 new Formula(
                         Function.SIN), 
-                Operation.MULTIPLY);
+                Operation.ADD);
         
         F.setCoeff(10);
-        F.setFreq(0.3);
+        F.setFreq(0.1);
         
-        F.getNext().setCoeff(2);
-        F.getNext().setFreq(0.01);
+        F.getNext().setCoeff(5);
+        F.getNext().setFreq(0.2);
+        
+        //Parameter[][] params = {
+        //    Gen_Formula.constructParams(true, true, 1, gaps[0], F),
+        //    Gen_Formula.constructParams(true, false, 1, gaps[1], F),
+        //    Gen_Circular.constructParams(100, 250, 250)};
+        
+        //Generator[] gens = {
+        //    new Gen_Formula(params[0]),
+        //    new Gen_Formula(params[1]),
+        //    new Gen_Circular(params[2])};
         
         Parameter[][] params = {
             Gen_Formula.constructParams(true, true, 1, gaps[0], F),
-            Gen_Circular.constructParams(400, 250, 250)};
+            Gen_Formula.constructParams(true, false, 1, gaps[1], F)};
         
-        Generator[] gens = {
+        AbstractGenerator[] gens = {
             new Gen_Formula(params[0]),
-            new Gen_Circular(params[1])};
+            new Gen_Formula(params[1])};
         
-        DC = CanvasWriter.draw(DC, gens);
+        PaletteNums = new int[2];
+        
+        PaletteNums[0]=0;
+        PaletteNums[1]=1;
+        
+        DC = CanvasWriter.draw(DC, gens, PaletteNums);
         
         C.show();
         S.show();
@@ -113,7 +130,7 @@ public class GUIManager implements ActionListener {
                     if(S.checkFields())
                     {
                         DC.setDimensions(S.getResX(), S.getResY());
-                        DC = CanvasWriter.draw(DC, gens);
+                        DC = CanvasWriter.draw(DC, gens, PaletteNums);
                         if(S.getGif())
                         {
                             fileManager.writeGif(ImageManager.constructSequence(DC), "Gifs/" + S.getFilename());
@@ -134,7 +151,7 @@ public class GUIManager implements ActionListener {
         } while (code >= 0);
     }
     
-    public BufferedImage[] drawPreview(Viewport VP, Palette[] P, Generator[] gens)
+    public BufferedImage[] drawPreview(Viewport VP, Palette[] P, AbstractGenerator[] gens)
     {
         return ImageManager.constructSequence(
                 CanvasWriter.draw(
@@ -142,7 +159,7 @@ public class GUIManager implements ActionListener {
                                 VP.getWidth(), 
                                 VP.getHeight(), 
                                 P), 
-                        gens));
+                        gens, PaletteNums));
     }
 
     @Override
