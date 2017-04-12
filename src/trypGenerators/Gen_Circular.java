@@ -190,9 +190,7 @@ public class Gen_Circular extends AbstractGenerator
     {
         if(params != null && params.length == 3)
         {
-            if(     params[0].getType()==paramType.INTEGER &&
-                    params[1].getType()==paramType.INTEGER &&
-                    params[2].getType()==paramType.INTEGER)
+            if(validateParams(params))
             {
                 r=params[0].getInt();
                 x=params[1].getInt();
@@ -202,6 +200,15 @@ public class Gen_Circular extends AbstractGenerator
         }
         
         return false;
+    }
+
+    public static boolean validateParams(Parameter[] params) 
+    {
+        return params != null &&
+               params.length==3 &&
+               params[0].getType()==paramType.INTEGER &&
+               params[1].getType()==paramType.INTEGER &&
+               params[2].getType()==paramType.INTEGER;
     }
 
     

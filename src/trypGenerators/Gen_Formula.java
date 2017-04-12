@@ -75,11 +75,7 @@ public class Gen_Formula extends AbstractGenerator
     {
         if(params != null && params.length == 5)
         {
-            if(     params[0].getType()==paramType.BOOLEAN && 
-                    params[1].getType()==paramType.BOOLEAN && 
-                    params[2].getType()==paramType.INTEGER &&
-                    params[3].getType()==paramType.INTARRAY &&
-                    params[4].getType()==paramType.FORMULA )
+            if(validateParams(params))
             {
                 HV=params[0].getBoolean();
                 dir=params[1].getBoolean();
@@ -91,6 +87,17 @@ public class Gen_Formula extends AbstractGenerator
         }
         
         return false;
+    }
+
+    public static boolean validateParams(Parameter[] params) 
+    {
+        return params != null &&
+                params.length==5 &&
+                params[0].getType()==paramType.BOOLEAN && 
+                params[1].getType()==paramType.BOOLEAN && 
+                params[2].getType()==paramType.INTEGER &&
+                params[3].getType()==paramType.INTARRAY &&
+                params[4].getType()==paramType.FORMULA;
     }
     
 }
