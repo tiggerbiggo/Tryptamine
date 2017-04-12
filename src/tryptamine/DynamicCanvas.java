@@ -102,6 +102,13 @@ public class DynamicCanvas
         return null;
     }
     
+    public PaletteReference getReference(int x, int y)
+    {
+        x=normalizeX(x);
+        y=normalizeY(y);
+        return PR[x][y];
+    }
+    
     public int getX()
     {
         return x;
@@ -129,6 +136,32 @@ public class DynamicCanvas
         return -1;
     }
     
+    public int normalizeX(int num)
+    {
+        while(num>=x)
+        {
+            num-=x;
+        }
+        while(num<0)
+        {
+            num+=x;
+        }
+        return num;
+    }
+    
+    public int normalizeY(int num)
+    {
+        while(num>=y)
+        {
+            num-=y;
+        }
+        while(num<0)
+        {
+            num+=y;
+        }
+        return num;
+    }
+    
     public void draw(int x, int y, int paletteIndex, int colorIndex)
     {
         if(checkDimensions(x, y) && checkColorIndex(paletteIndex, colorIndex))
@@ -136,6 +169,13 @@ public class DynamicCanvas
             //System.out.println("VALID: " + x + ", " + y);
             PR[x][y]=new PaletteReference(colorIndex, paletteIndex);
         }
+    }
+    
+    public void setReference(int x, int y, PaletteReference ref)
+    {
+        x=normalizeX(x);
+        y=normalizeY(y);
+        this.PR[x][y]=ref;
     }
     
     public Palette getPalette(int index)
@@ -147,21 +187,7 @@ public class DynamicCanvas
         else return null;
     }
     
-    public Color getPixel(int x, int y)
-    {
-        if(checkDimensions(x, y))
-        {
-            if(PR[x][y].getPaletteIndex()>=0 || PR[x][y].getColorIndex()>=0)
-            {
-                if(checkPaletteIndex(PR[x][y].getPaletteIndex()))
-                {
-                    return Palettes[PR[x][y].getPaletteIndex()].getColor(PR[x][y].getColorIndex());
-                }
-            }
-            
-        }
-        return BG;
-    }
+    
     
     private boolean checkValid(int c)
     {

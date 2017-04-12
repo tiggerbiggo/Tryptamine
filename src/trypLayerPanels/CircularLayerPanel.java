@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import trypComponents.IntegerPanel;
+import trypGenerators.Gen_Circular;
 import trypParams.Parameter;
 
 /**
@@ -17,8 +18,6 @@ import trypParams.Parameter;
  */
 public class CircularLayerPanel extends AbstractLayerPanel
 {
-    //radius, x, y
-    
     IntegerPanel[] intPanels;
     
     @Override
@@ -41,14 +40,39 @@ public class CircularLayerPanel extends AbstractLayerPanel
             intPanels[i]=new IntegerPanel(panelTexts[i], false);
             this.add(intPanels[i], c);
         }
-        
-        this.setBackground(Color.RED);
     }
     
     @Override
     public Parameter[] getParams() 
     {
-        return null;
+        int[] tempArray = new int[3];
+        for(int i=0;i<3;i++)
+        {
+            try
+            {
+                tempArray[i] = intPanels[i].getInt();
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
+        return Gen_Circular.constructParams(
+                tempArray[0], 
+                tempArray[1], 
+                tempArray[2]);
+    }
+
+    @Override
+    public void setParams(Parameter[] params) 
+    {
+        if(Gen_Circular.validateParams(params))
+        {
+            for(int i=0; i<=2; i++)
+            {
+                intPanels[i].setInt(params[i].getInt());
+            }
+        }
     }
     
 }

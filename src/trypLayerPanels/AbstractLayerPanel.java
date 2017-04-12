@@ -17,4 +17,6 @@ public abstract class AbstractLayerPanel extends JPanel
     public abstract Parameter[] getParams();
     
     public abstract void initGUI();
+    
+    public abstract void setParams(Parameter[] params);
 }

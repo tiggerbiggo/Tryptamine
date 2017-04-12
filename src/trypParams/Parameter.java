@@ -13,7 +13,7 @@ public final class Parameter
     int paramInt=0;
     int[] paramIntArray;
     Formula paramFormula;
-    boolean paramBoolean=false;
+    boolean paramBoolean;
     
     paramType type = paramType.NULL;
 

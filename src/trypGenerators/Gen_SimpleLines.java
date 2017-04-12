@@ -79,10 +79,7 @@ public class Gen_SimpleLines extends AbstractGenerator
     {
         if(params != null && params.length == 4)
         {
-            if(     params[0].getType()==paramType.BOOLEAN && 
-                    params[1].getType()==paramType.BOOLEAN &&
-                    params[2].getType()==paramType.INTEGER &&
-                    params[3].getType()==paramType.INTARRAY)
+            if(validateParams(params))
             {
                 this.HV=params[0].getBoolean();
                 this.dir=params[1].getBoolean();
@@ -94,6 +91,16 @@ public class Gen_SimpleLines extends AbstractGenerator
         }
         System.out.println("Returned False");
         return false;
+    }
+
+    public static boolean validateParams(Parameter[] params) 
+    {
+        return params != null &&
+                params.length==4 &&
+                params[0].getType()==paramType.BOOLEAN && 
+                params[1].getType()==paramType.BOOLEAN &&
+                params[2].getType()==paramType.INTEGER &&
+                params[3].getType()==paramType.INTARRAY;
     }
     
     

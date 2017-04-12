@@ -6,10 +6,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import trypGUI.*;
-import trypGenerators.Gen_Circular;
-import trypGenerators.Gen_Formula;
-import trypGenerators.Gen_SimpleLines;
-import trypGenerators.AbstractGenerator;
+import trypGenerators.*;
 import trypParams.Parameter;
 import trypResources.*;
 
@@ -27,8 +24,12 @@ public class GUIManager implements ActionListener {
     PalEdit PE = new PalEdit();
     LayerEdit LE = new LayerEdit();
     
-    Palette[] P;
-    int[] PaletteNums;
+    Palette[] palettes;
+    int[] paletteNums;
+    
+    Layer[] layers;
+    
+    AbstractGenerator[] gens;
 
     int code = 0;
 
@@ -48,17 +49,18 @@ public class GUIManager implements ActionListener {
         
         int PLength = 40;
         
-        P = new Palette[2];
-        P[0]=new Palette(PLength,0);
+        palettes = new Palette[3];
+        palettes[0]=new Palette(PLength,0);
         
-        P[0].setGradient(0, PLength-1, Color.blue, Color.white);
+        palettes[0].setGradient(0, PLength-1, Color.blue, Color.white);
         
-        P[1] = new Palette(PLength, 0);
-        P[1].setGradient(0, PLength-1, Color.black, Color.green);
+        palettes[1] = new Palette(PLength, 0);
+        palettes[1].setGradient(0, PLength-1, Color.black, Color.green);
         
-        DynamicCanvas DC = new DynamicCanvas(500, 500, P);
+        palettes[2] = new Palette(PLength, 0);
+        palettes[2].setGradient(0, PLength-1, Color.red, Color.blue);
         
-        int[][] gaps = {{0}, {1}};
+        DynamicCanvas DC = new DynamicCanvas(500, 500, palettes);
         
         Formula F = new Formula(
                 Function.COS, 
@@ -67,10 +69,10 @@ public class GUIManager implements ActionListener {
                 Operation.ADD);
         
         F.setCoeff(10);
-        F.setFreq(0.1);
+        F.setFreq(0.02);
         
-        F.getNext().setCoeff(5);
-        F.getNext().setFreq(0.2);
+        F.getNext().setCoeff(8);
+        F.getNext().setFreq(0.1);
         
         //Parameter[][] params = {
         //    Gen_Formula.constructParams(true, true, 1, gaps[0], F),
@@ -83,32 +85,31 @@ public class GUIManager implements ActionListener {
         //    new Gen_Circular(params[2])};
         
         Parameter[][] params = {
-            Gen_Formula.constructParams(true, true, 1, gaps[0], F),
-            Gen_Formula.constructParams(true, false, 1, gaps[1], F)};
+            Gen_Formula.constructParams(true, false, 1, GapPresets.gaps[0], F),
+            Gen_Formula.constructParams(true, true, 1, GapPresets.gaps[1], F),
+            Gen_DistortFormula.constructParams(false, false, GapPresets.gaps[0], F)};
         
-        AbstractGenerator[] gens = {
-            new Gen_Formula(params[0]),
-            new Gen_Formula(params[1])};
         
-        PaletteNums = new int[2];
+        paletteNums = new int[3];
         
-        PaletteNums[0]=0;
-        PaletteNums[1]=1;
+        paletteNums[0]=0;
+        paletteNums[1]=1;
+        paletteNums[2]=2;
         
-        DC = CanvasWriter.draw(DC, gens, PaletteNums);
+        DC = CanvasWriter.draw(DC, gens, paletteNums);
         
         C.show();
         S.show();
         
         PE.show();
-        PE.addPalette(P[0]);
-        PE.addPalette(P[1]);
+        PE.addPalette(palettes[0]);
+        PE.addPalette(palettes[1]);
         
         LE.show();
         
         VP.show();
         
-        VP.setImages(drawPreview(VP, P, gens));
+        VP.setImages(drawPreview(VP, palettes, gens));
         
         do {
             try 
@@ -130,20 +131,21 @@ public class GUIManager implements ActionListener {
                     if(S.checkFields())
                     {
                         DC.setDimensions(S.getResX(), S.getResY());
-                        DC = CanvasWriter.draw(DC, gens, PaletteNums);
+                        DC = CanvasWriter.draw(DC, gens, paletteNums);
                         if(S.getGif())
                         {
                             fileManager.writeGif(ImageManager.constructSequence(DC), "Gifs/" + S.getFilename());
                         }
                         else
                         {
-                            fileManager.writeSequence(ImageManager.constructSequence(DC), S.getFilename());
+                            fileManager.writeSequence(ImageManager.constructSequence(DC), "Png/"+S.getFilename());
                         }
                     }
                     break;
                 case ActionCodes.CODE_VIEWPORT_REFRESH:
                     updatePalettes();
-                    VP.setImages(drawPreview(VP, P, gens));
+                    updateLayers();
+                    VP.setImages(drawPreview(VP, palettes, gens));
                     break;
                     
             }
@@ -153,13 +155,11 @@ public class GUIManager implements ActionListener {
     
     public BufferedImage[] drawPreview(Viewport VP, Palette[] P, AbstractGenerator[] gens)
     {
-        return ImageManager.constructSequence(
-                CanvasWriter.draw(
-                        new DynamicCanvas(
+        return ImageManager.constructSequence(CanvasWriter.draw(new DynamicCanvas(
                                 VP.getWidth(), 
                                 VP.getHeight(), 
                                 P), 
-                        gens, PaletteNums));
+                        gens, paletteNums));
     }
 
     @Override
@@ -194,7 +194,12 @@ public class GUIManager implements ActionListener {
 
     private void updatePalettes() 
     {
-        P=PE.getPalettes();
+        palettes=PE.getPalettes();
+    }
+
+    private void updateLayers() 
+    {
+        gens = LE.getGens();
     }
 
     
