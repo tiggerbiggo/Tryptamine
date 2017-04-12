@@ -29,8 +29,8 @@ public class CanvasWriter
     public static DynamicCanvas draw(DynamicCanvas DC, AbstractGenerator[] gens, int[] PaletteNums)
     {
         if(gens != null && 
+                checkGenerators(gens) &&
                 PaletteNums != null &&
-                gens != null &&
                 PaletteNums.length>=gens.length)
         {
             for(int i=0; i<gens.length; i++)
@@ -44,5 +44,21 @@ public class CanvasWriter
     public void setGenerators(AbstractGenerator[] gens)
     {
         this.gens = gens;
+    }
+    
+    public static boolean checkGenerators(AbstractGenerator[] gens)
+    {
+        if(gens!= null)
+        {
+            for(AbstractGenerator g : gens)
+            {
+                if(g==null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

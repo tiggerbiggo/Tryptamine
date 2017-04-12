@@ -66,6 +66,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         }
         
         colorSpeed = new IntegerPanel("Color Speed", true);
+        this.add(colorSpeed);
         
         gapPanel = new GapPanel();
         this.add(gapPanel);
