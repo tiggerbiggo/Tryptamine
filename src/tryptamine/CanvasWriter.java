@@ -2,8 +2,8 @@ package tryptamine;
 
 import trypGenerators.*;
 import trypParams.*;
-import trypResources.Formula;
-import trypResources.Function;
+import trypFormula.Formula;
+import trypFormula.Function;
 
 public class CanvasWriter 
 {
@@ -36,6 +36,18 @@ public class CanvasWriter
             for(int i=0; i<gens.length; i++)
             {
                 DC = gens[i].draw(DC, PaletteNums[0]);
+            }
+        }
+        return DC;
+    }
+    
+    public static DynamicCanvas draw(DynamicCanvas DC, AbstractGenerator[] gens, int PaletteNum)
+    {
+        if(gens != null && checkGenerators(gens))
+        {
+            for(int i=0; i<gens.length; i++)
+            {
+                DC = gens[i].draw(DC, PaletteNum);
             }
         }
         return DC;

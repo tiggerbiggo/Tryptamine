@@ -164,9 +164,10 @@ public class DynamicCanvas
     
     public void draw(int x, int y, int paletteIndex, int colorIndex)
     {
-        if(checkDimensions(x, y) && checkColorIndex(paletteIndex, colorIndex))
+        if(checkDimensions(x, y) && checkColorIndex(paletteIndex, 0))
         {
             //System.out.println("VALID: " + x + ", " + y);
+            colorIndex=Palettes[paletteIndex].normalize(colorIndex);
             PR[x][y]=new PaletteReference(colorIndex, paletteIndex);
         }
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trypComponents;
 
 import java.awt.Color;
@@ -13,9 +8,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import trypResources.ColorTools;
 
-/**
+/**A set of buttons which can be filled with colours, used to display a gradient to the user
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
 public class ColorBar extends JPanel
 {
@@ -25,6 +20,11 @@ public class ColorBar extends JPanel
     String nullText = "...";
     JButton[] buttons;
 
+    /**Creates a new Color Bar
+     *
+     * @param num The number of buttons to generate
+     * @param A The action listener of the parent class to trigger events
+     */
     public ColorBar(int num, ActionListener A)
     {
         //if(num<0)
@@ -36,6 +36,11 @@ public class ColorBar extends JPanel
         init();
     }
     
+    /**Sets the text of a button given its index
+     *
+     * @param index The index of the button to change
+     * @param text The text to display on the button
+     */
     public void setText(int index, String text)
     {
         if(checkIndex(index))
@@ -44,6 +49,9 @@ public class ColorBar extends JPanel
         }
     }
     
+    /**Basic initialisation of the object
+     * 
+     */
     private void init()
     {
         
@@ -65,12 +73,11 @@ public class ColorBar extends JPanel
         }
     }
     
-    private boolean checkValid(int toCheck)
-    {
-        return toCheck >=0;
-    }
-    
-
+    /**Checks which button was pressed and returns its index
+     * 
+     * @param toCheck The object to check against the button array
+     * @return The index of the pressed button, -1 if no match found
+     */
     public int checkActions(Object toCheck)
     {
         for(int i=0; i<num; i++)
@@ -83,25 +90,39 @@ public class ColorBar extends JPanel
         return -1;
     }
     
+    /**
+     * 
+     * @return The number of buttons
+     */
     public int getNum()
     {
         return num;
     }
     
+    /**Basic validation method, checks that a given number is within range 0&gt;= n &gt; num where num is the number of buttons
+     * 
+     * @param index The index to check
+     * @return True if within range, otherwise false
+     */
     public boolean checkIndex(int index)
     {
         return index>=0 && index<num;
     }
-    
-    public void setColor(int index, Color C, int ColorIndex)
+    /**Sets the color of a button given its index and a number to display in the button
+     * 
+     * @param index The index of the button to set the color
+     * @param c the color to change to
+     * @param colorIndex TODO: Rework and remove this, it's inconsistent with the method's purpose
+     */
+    public void setColor(int index, Color c, int colorIndex)
     {
         if(checkIndex(index))
         {
-            if(C != null)
+            if(c != null)
             {
-                buttons[index].setBackground(C);
-                buttons[index].setText("" + ColorIndex);
-                buttons[index].setForeground(ColorTools.invert(C));
+                buttons[index].setBackground(c);
+                buttons[index].setText("" + colorIndex);
+                buttons[index].setForeground(ColorTools.invert(c));
             }
             else
             {

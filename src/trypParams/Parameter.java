@@ -1,6 +1,6 @@
 package trypParams;
 
-import trypResources.Formula;
+import trypFormula.Formula;
 
 /**
  *

@@ -79,8 +79,8 @@ public class Gen_Circular extends AbstractGenerator
     
     /**Very poorly written, old, don't use unless you want loads of unnecessary calculations
      *
-     * @param DC
-     * @return
+     * @param DC The DynamicCanvas to write to
+     * @return The drawn DynamicCanvas
      * @deprecated
      */
     @Deprecated
@@ -124,7 +124,6 @@ public class Gen_Circular extends AbstractGenerator
                     }
                 }
                 while(steps<10);
-                System.out.println("End refine loop, steps: " + steps + ", Theta: " + theta);
             }
             while(theta<=360);
         }

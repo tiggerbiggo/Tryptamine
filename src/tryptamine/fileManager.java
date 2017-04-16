@@ -32,8 +32,8 @@ public class fileManager
     
     /**Writes a sequence of PNG images with an incremental filename
      *
-     * @param sequence
-     * @param filename
+     * @param sequence A sequence of images to write
+     * @param filename The name of the file to write
      */
     public static void writeSequence(BufferedImage[] sequence, String filename)
     {

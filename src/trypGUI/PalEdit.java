@@ -25,55 +25,59 @@ import trypResources.ActionCodes;
 import trypResources.Palette;
 import trypListModels.PaletteListModel;
 
-/**
+/**Allows the user to view and edit color palettes
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
 public class PalEdit implements ActionListener, ListSelectionListener, ChangeListener
 {
-    JFrame JF_PalEdit;
+    JFrame palEditFrame;
     
     Palette currentPalette;
     
-    JScrollPane JS_PaletteScroll;
+    JScrollPane paletteScrollPane;
     
-    JPanel JP_EditPane;
+    JPanel editPanel;
     
-    JSlider JSL_ColorIndex;
+    JSlider colorIndexSlider;
     
-    ColorBar CB;
+    ColorBar cBar;
     
-    ColorPicker CP1;
-    ColorPicker CP2;
+    ColorPicker pickerStart;
+    ColorPicker pickerEnd;
     
-    GradientPanel GP;
+    GradientPanel gPanel;
     
     final int barNum = 13;
     
     int code, barPressed, barIndex, barSelected;
     
     
-    JList JL_PaletteList;
+    JList paletteList;
     
-    PaletteListModel PLM = new PaletteListModel();
+    PaletteListModel pListModel = new PaletteListModel();
     
+    /**Initialises the frame and it's components
+     * 
+     * @param A The action listener of the parent object
+     */
     public void initGUI(ActionListener A)
     {
-        JF_PalEdit = new JFrame("Palette Editor");
-        JF_PalEdit.setLayout(null);//new GridBagLayout()
-        JF_PalEdit.setBounds(10, 10, 1000, 500);
-        JF_PalEdit.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JF_PalEdit.setResizable(false);
-        JF_PalEdit.setLocationRelativeTo(null);
-        JF_PalEdit.setVisible(false);
+        palEditFrame = new JFrame("Palette Editor");
+        palEditFrame.setLayout(null);
+        palEditFrame.setBounds(10, 10, 1000, 500);
+        palEditFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        palEditFrame.setResizable(false);
+        palEditFrame.setLocationRelativeTo(null);
+        palEditFrame.setVisible(false);
         
-        JS_PaletteScroll = new JScrollPane();
-        JS_PaletteScroll.setBounds(0, 0, 200, 500);
-        JF_PalEdit.add(JS_PaletteScroll);
+        paletteScrollPane = new JScrollPane();
+        paletteScrollPane.setBounds(0, 0, 200, 500);
+        palEditFrame.add(paletteScrollPane);
         
-        JP_EditPane = new JPanel();
-        JP_EditPane.setLayout(new GridBagLayout());//new GridBagLayout()
-        JP_EditPane.setBounds(200, 0, 800, 450);
+        editPanel = new JPanel();
+        editPanel.setLayout(new GridBagLayout());
+        editPanel.setBounds(200, 0, 800, 450);
         
         GridBagConstraints c = new GridBagConstraints();
         
@@ -85,8 +89,8 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.gridwidth=2;
         c.gridheight=1;
         
-        CB = new ColorBar(barNum, this);
-        JP_EditPane.add(CB, c);
+        cBar = new ColorBar(barNum, this);
+        editPanel.add(cBar, c);
         
         c.fill=GridBagConstraints.HORIZONTAL;
         c.weightx=1;
@@ -96,13 +100,13 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.gridwidth=2;
         c.gridheight=1;
         
-        JSL_ColorIndex = new JSlider();
-        JSL_ColorIndex.setEnabled(false);
-        JSL_ColorIndex.addChangeListener(this);
-        JP_EditPane.add(JSL_ColorIndex, c);
+        colorIndexSlider = new JSlider();
+        colorIndexSlider.setEnabled(false);
+        colorIndexSlider.addChangeListener(this);
+        editPanel.add(colorIndexSlider, c);
         
-        CP1 = new ColorPicker(true, this);
-        CP2 = new ColorPicker(false, this);
+        pickerStart = new ColorPicker(true, this);
+        pickerEnd = new ColorPicker(false, this);
         
         c.fill=GridBagConstraints.BOTH;
         c.weightx=1;
@@ -114,7 +118,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         
         c.insets=new Insets(30,30,30,30);
         
-        JP_EditPane.add(CP1, c);
+        editPanel.add(pickerStart, c);
         
         c.fill=GridBagConstraints.BOTH;
         c.weightx=1;
@@ -126,7 +130,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         
         
         
-        JP_EditPane.add(CP2, c);
+        editPanel.add(pickerEnd, c);
         
         c.insets=new Insets(0,0,0,0);
         
@@ -138,80 +142,89 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.gridwidth=2;
         c.gridheight=1;
         
-        GP=new GradientPanel(this);
-        JP_EditPane.add(GP, c);
+        gPanel=new GradientPanel(this);
+        editPanel.add(gPanel, c);
         
-        JF_PalEdit.add(JP_EditPane);
+        palEditFrame.add(editPanel);
         
         updatePaletteList();
     }
     
+    /**Displays the frame and updates the Palette List
+     * 
+     */
     public void show()
     {
-        JF_PalEdit.setVisible(true);
+        palEditFrame.setVisible(true);
         updatePaletteList();
     }
     
+    /**Adds a palette to the list model and updates the list
+     * 
+     * @param P The palette object to add
+     */
     public void addPalette(Palette P)
     {
-        PLM.add(P);
+        pListModel.add(P);
         updatePaletteList();
     }
     
+    /**Updates the palette list by removing it, assigning a new object then re-adding it to the scroll pane
+     * 
+     */
     public void updatePaletteList()
     {
-        JS_PaletteScroll.removeAll();
-        JL_PaletteList = new JList(PLM);
-        JL_PaletteList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JL_PaletteList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        JL_PaletteList.setBounds(0, 0, 200, 1000);
-        JL_PaletteList.addListSelectionListener(this);
-        JS_PaletteScroll.add(JL_PaletteList);
+        paletteScrollPane.removeAll();
+        paletteList = new JList(pListModel);
+        paletteList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        paletteList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        paletteList.setBounds(0, 0, 200, 1000);
+        paletteList.addListSelectionListener(this);
+        paletteScrollPane.add(paletteList);
     }
     
+    /**Updates the color bar with the current colours in the palette
+     * 
+     */
     public void updateColorBar()
     {
         if(currentPalette != null)
         {
-            for(int i=0; i<CB.getNum(); i++)
+            for(int i=0; i<cBar.getNum(); i++)
             {
                 System.out.println("Setting Color: " + i + ", " + (i+barIndex));
-                CB.setColor(i, currentPalette.getColor(i+barIndex), i+barIndex);
-                if(i+barIndex == barSelected)   CB.setText(i, "*"+barSelected+"*");
+                cBar.setColor(i, currentPalette.getColor(i+barIndex), i+barIndex);
+                if(i+barIndex == barSelected)   cBar.setText(i, "*"+barSelected+"*");
             }
         }
     }
     
-    public int checkActions(Object toCheck)
-    {
-        return ActionCodes.NULLCODE;
-    }
-    
-    
-    
+    /**Updates the palette from the list model and updates the color bar
+     * 
+     */
     public void updateCurrentPalette()
     {
-        currentPalette = (Palette)PLM.getElementAt(JL_PaletteList.getSelectedIndex());
+        currentPalette = (Palette)pListModel.getElementAt(paletteList.getSelectedIndex());
         updateColorBar();
         if(currentPalette != null)
         {
-            if(currentPalette.getNum()>CB.getNum())
+            if(currentPalette.getNum()>cBar.getNum())
             {
-                JSL_ColorIndex.setEnabled(true);
-                JSL_ColorIndex.setMinimum(0);
-                JSL_ColorIndex.setMaximum(currentPalette.getNum()-CB.getNum());
+                colorIndexSlider.setEnabled(true);
+                colorIndexSlider.setMinimum(0);
+                colorIndexSlider.setMaximum(currentPalette.getNum()-cBar.getNum());
                 
                 
                 
-                GP.setAllEnabled(true);
-                GP.setMax(currentPalette.getNum()-1);
-                GP.updateFields();
+                gPanel.setAllEnabled(true);
+                gPanel.setMax(currentPalette.getNum()-1);
+                gPanel.updateFields();
             }
             else 
             {
-                JSL_ColorIndex.setEnabled(false);
+                colorIndexSlider.setEnabled(false);
             }
-            JSL_ColorIndex.setValue(0);
+            colorIndexSlider.setValue(0);
         }
     }
     
@@ -219,7 +232,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     public void actionPerformed(ActionEvent e) 
     {
         Object toCheck = e.getSource();
-        int tmp = CB.checkActions(toCheck);
+        int tmp = cBar.checkActions(toCheck);
         if(tmp != -1)
         {
             
@@ -230,7 +243,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
             
         }
         
-        tmp = CP1.checkActions(toCheck);
+        tmp = pickerStart.checkActions(toCheck);
         if(tmp != ActionCodes.NULLCODE)
         {
             if(tmp == ActionCodes.CODE_COLORPICKER_BUTTON)
@@ -239,9 +252,9 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
             }
         }
         
-        tmp=CP2.checkActions(toCheck);
+        tmp=pickerEnd.checkActions(toCheck);
         
-        tmp=GP.checkActions(toCheck);
+        tmp=gPanel.checkActions(toCheck);
         if(tmp != ActionCodes.NULLCODE)
         {
             System.out.println(tmp);
@@ -250,17 +263,17 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
                 case ActionCodes.CODE_GRADIENTPANEL_SELECTSTART:
                     if(barSelected != -1)
                     {
-                        GP.setStart(barSelected);
+                        gPanel.setStart(barSelected);
                     }
                     break;
                 case ActionCodes.CODE_GRADIENTPANEL_SELECTEND:
                     if(barSelected != -1)
                     {
-                        GP.setEnd(barSelected);
+                        gPanel.setEnd(barSelected);
                     }
                     break;
                 case ActionCodes.CODE_GRADIENTPANEL_MAKE:
-                    currentPalette.setGradient(GP.getStart(), GP.getEnd(), CP1.getColor(), CP2.getColor());
+                    currentPalette.setGradient(gPanel.getStart(), gPanel.getEnd(), pickerStart.getColor(), pickerEnd.getColor());
                     updateColorBar();
                     break;
                 
@@ -271,7 +284,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     @Override
     public void valueChanged(ListSelectionEvent e) 
     {
-        if(e.getSource() == JL_PaletteList)
+        if(e.getSource() == paletteList)
         {
             updateCurrentPalette();
         }
@@ -280,14 +293,18 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     @Override
     public void stateChanged(ChangeEvent e) 
     {
-        barIndex = JSL_ColorIndex.getValue();
+        barIndex = colorIndexSlider.getValue();
         updateColorBar();
         System.out.println(barIndex);
     }
     
+    /**
+     * 
+     * @return An array of all the palette objects
+     */
     public Palette[] getPalettes()
     {
-        return PLM.getList();
+        return pListModel.getList();
     }
     
 }

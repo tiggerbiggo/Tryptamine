@@ -6,43 +6,48 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import tryptamine.GapPresets;
 
-public class GapPanel extends JPanel implements ActionListener
+/**A prefab panel to allow the user to select gaps, uses the GapPresets class
+ * 
+ * @see tryptamine.GapPresets
+ * @author tiggerbiggo
+ */
+public class GapPanel extends JPanel
 {
     String text;
     
-    JLabel JL_Text;
+    JLabel textLabel;
     JComboBox comboBox;
 
     public GapPanel() 
     {
         this.setLayout(new GridLayout(0,1));
         
-        JL_Text = new JLabel(text);
+        textLabel = new JLabel(text);
         
         comboBox = new JComboBox(GapPresets.GAPNAMES);
-        comboBox.addActionListener(this);
         
-        this.add(JL_Text);
+        this.add(textLabel);
         
         this.add(comboBox);
     }
     
+    /**Gets the currently selected int array of gaps
+     * 
+     * @return The gaps the user has selected
+     */
     public int[] getGaps()
     {
         return GapPresets.gaps[comboBox.getSelectedIndex()];
     }
     
+    /**
+     * 
+     * @param index Sets the index, for loading from a layer object
+     */
     public void setSelected(int index)
     {
         if(index>=0 && index<comboBox.getItemCount()) comboBox.setSelectedIndex(index);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        
     }
 }

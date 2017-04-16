@@ -1,24 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package trypGUI;
 
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import trypResources.ActionCodes;
 
-/**
+/**A viewing window allowing the user to see a preview of the current image
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
-public class Viewport implements ActionListener
+public class Viewport
 {
     JFrame JF_Viewport = new JFrame("Viewport");
     
@@ -28,18 +22,29 @@ public class Viewport implements ActionListener
     Image[] images;
     int currentImage = 0;
     
+    /**Sets the images to be displayed by the viewport
+     * 
+     * @param images The image sequence to be displayed
+     */
     public void setImages(BufferedImage[] images) {
         this.images = (Image[])images;
         currentImage = 0;
         drawImage();
     }
 
-    public void addImage(BufferedImage toAdd) {
+    /**Adds a single image to the array, will not add if the image is null
+     * 
+     * @param toAdd The image object to add
+     */
+    public void addImage(BufferedImage toAdd) 
+    {
 
-        if (images != null) {
+        if (images != null && toAdd != null) 
+        {
             Image[] temp = images;
             images = new Image[images.length + 1];
-            for (int i = 0; i <= temp.length; i++) {
+            for (int i = 0; i <= temp.length; i++) 
+            {
                 images[i] = temp[i];
             }
             images[images.length] = (Image)toAdd;
@@ -48,12 +53,20 @@ public class Viewport implements ActionListener
     }
 
     
-
+    /**
+     * 
+     * @return The current image being displayed to the user
+     */
     public int getImageIndex()
     {
         return currentImage;
     }
     
+    /**Sets the current image index, if it is outside the range, normalizes the input
+     * 
+     * see normalize()
+     * @param index The index to set
+     */
     public void setImageIndex(int index) 
     {
         currentImage = index;
@@ -74,16 +87,35 @@ public class Viewport implements ActionListener
         System.out.println("Image Index: " + currentImage);
     }
     
+    /**Basic validation method to check if images currently exist in memory
+     * 
+     * @return true if images exist, else false
+     */
     public boolean imagesExist()
     {
         return images!=null;
     }
     
+    /**Checks if an image exists at given index n
+     * 
+     * @param n The index of the image to check
+     * @return True if the image exists at index n, false if n falls outside of range, no image exists at n or no images exist at all
+     */
     public boolean imagesExist(int n)
     {
-        return images[n]!=null;
+        if(imagesExist() && 
+                n>=0 &&
+                n<images.length)
+            return images[n]!=null;
+        return false;
     }
 
+    /**Normalises the input toNormalize to within range 0 - normal
+     * 
+     * @param toNormalize the number to normalize
+     * @param normal The maximum number
+     * @return the normalized number
+     */
     public int normalize(int toNormalize, int normal) 
     {
         while (toNormalize >= normal) 
@@ -97,11 +129,18 @@ public class Viewport implements ActionListener
         return toNormalize;
     }
 
+    /**Check to see if a graphics object exists for the JFrame
+     * 
+     * @return True if graphics exist, else false
+     */
     public boolean checkGraphics()
     {
         return JF_Viewport.getGraphics() != null;
     }
     
+    /**Draws the image from the images array based on the currentImage integer
+     * 
+     */
     public void drawImage() 
     {
         
@@ -113,6 +152,10 @@ public class Viewport implements ActionListener
         }
     }
 
+    /**Basic validation to check if the image number is in range
+     * 
+     * @return true if image is within range, false if it is not or if no images exist
+     */
     public boolean checkImageNumber() 
     {
         if(imagesExist())
@@ -122,6 +165,10 @@ public class Viewport implements ActionListener
         else return false;
     }
     
+    /**Initialises the components
+     * 
+     * @param A The action listener of the parent method
+     */
     public void initGUI(ActionListener A) 
     {
         JF_Viewport.setLayout(null);
@@ -140,26 +187,38 @@ public class Viewport implements ActionListener
         JF_Viewport.add(JB_Refresh);
     }
     
+    /**
+     * 
+     * @return The width of the viewport
+     */
     public int getWidth()
     {
         return JF_Viewport.getWidth();
     }
     
+    /**
+     * 
+     * @return The height of the viewport
+     */
     public int getHeight()
     {
         return JF_Viewport.getHeight();
     }
     
+    /**Displays the viewport window
+     * 
+     */
     public void show()
     {
         JF_Viewport.setVisible(true);
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
+    /**
+     * 
+     * @see trypResources.ActionCodes
+     * @param toCheck The object to check against elements in this class
+     * @return An action code based on trypResources.ActionCodes
+     */
     public int checkActions(Object toCheck)
     {
         if(toCheck == JB_Render) return ActionCodes.CODE_VIEWPORT_RENDER;

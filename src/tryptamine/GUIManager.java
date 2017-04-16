@@ -1,6 +1,9 @@
 package tryptamine;
 
 
+import trypFormula.Formula;
+import trypFormula.Operation;
+import trypFormula.Function;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -181,10 +184,6 @@ public class GUIManager implements ActionListener {
         if(code == ActionCodes.NULLCODE)
         {
             code = VP.checkActions(toCheck);
-        }
-        if(code == ActionCodes.NULLCODE)
-        {
-            code = PE.checkActions(toCheck);
         }
         
         

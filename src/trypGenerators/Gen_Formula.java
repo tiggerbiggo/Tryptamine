@@ -2,7 +2,7 @@ package trypGenerators;
 
 import trypParams.Parameter;
 import trypParams.paramType;
-import trypResources.Formula;
+import trypFormula.Formula;
 import tryptamine.DynamicCanvas;
 
 /**

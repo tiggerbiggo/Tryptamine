@@ -21,7 +21,12 @@ import trypListModels.LayerListModel;
 import trypParams.Parameter;
 import trypResources.Layer;
 
-public class LayerEdit implements ActionListener, ChangeListener, ListSelectionListener {
+/**Allows the editing of layers to change the look of the image
+ * 
+ * @author tiggerbiggo
+ */
+public class LayerEdit implements ActionListener, ChangeListener, ListSelectionListener 
+{
 
     JFrame layerFrame;
 
@@ -43,6 +48,10 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
     Layer currentLayer;
     int selectedIndex;
 
+    /**Sets up the components of the GUI
+     * 
+     * @param A The action listener of the parent object
+     */
     public void initGUI(ActionListener A) {
         layerFrame = new JFrame("Layers");
         layerFrame.setLayout(new GridBagLayout());//new GridBagLayout()
@@ -67,6 +76,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
 
         layerScroll = new JScrollPane();
 
+        
         c.gridwidth = 2;
         c.gridheight = 3;
         c.fill = GridBagConstraints.BOTH;
@@ -133,6 +143,9 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
 
     }
 
+    /**Removes and re creates the JList to update the elements displayed
+     * 
+     */
     public void updateList() {
         layerScroll.removeAll();
         layerList = new JList(listModel);
@@ -142,10 +155,17 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         layerScroll.repaint();
     }
 
+    /**Displays the JFrame
+     * 
+     */
     public void show() {
         layerFrame.setVisible(true);
     }
 
+    /**Sets the enabled state of select elements to control program flow
+     * 
+     * @param state The state to set the elements to
+     */
     public void setAllEnabled(boolean state) 
     {
         paletteComboBox.setEnabled(state);
@@ -156,6 +176,9 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         }
     }
 
+    /**Performs an update on the currently selected layer, and the AbstractLayerPanel object
+     * @see trypLayerPanels
+     */
     public void update() 
     {
         int type;
@@ -176,6 +199,11 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         updateLayerPanel(type);
     }
     
+    /**Updates the layer panel and the parameters contained within it
+     * 
+     * @see trypGenerators.GenType
+     * @param type The type of panel to fetch
+     */
     public void updateLayerPanel(int type)
     {
         layerFrame.remove(layerPanel);
@@ -192,24 +220,39 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         layerFrame.revalidate();
     }
 
+    /**Updates the layer panel and the Layer object with the appropriate type
+     * 
+     */
     public void updateType()
     {
         updateLayerPanel(typeComboBox.getSelectedIndex());
         if(currentLayer != null) currentLayer.setType(typeComboBox.getSelectedIndex());
     }
     
+    /**Gets an array of all the generators from the list model
+     * 
+     * @return The array of generators, any given element will be null if parameters entered by the user are invalid or missing, and if no elements exist will return null
+     */
     public AbstractGenerator[] getGens()
     {
-        AbstractGenerator[] toReturn = new AbstractGenerator[listModel.getSize()];
-        
-        for(int i=0;i<toReturn.length;i++)
+        if(listModel.getSize()>=1)
         {
-            toReturn[i] = ((Layer)listModel.getElementAt(i)).getGenerator();
+            AbstractGenerator[] toReturn = new AbstractGenerator[listModel.getSize()];
+
+            for(int i=0;i<toReturn.length;i++)
+            {
+                toReturn[i] = ((Layer)listModel.getElementAt(i)).getGenerator();
+            }
+
+            return toReturn;
         }
-        
-        return toReturn;
+        return null;
     }
     
+    /**Deals with actions fired from elements and calls the appropriate methods
+     * 
+     * @param e The event object
+     */
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -236,7 +279,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
                         }
                         break;
                     case 2://save
-                        if(checkParams())
+                        if(updateParams())
                         {
                             listModel.setElement(selectedIndex, currentLayer);
                         }
@@ -248,17 +291,17 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         }
     }
 
-    public boolean checkParams()
+    /**Updates the parameters contained in the currentLayer object
+     * 
+     * @return true if parameters are valid and currentLayer exists, else false
+     */
+    public boolean updateParams()
     {
         Parameter[] toCheck = layerPanel.getParams();
         if(toCheck != null && currentLayer != null)
         {
-            try
-            {
-                currentLayer.setParams(toCheck);
-                return true;
-            }
-            catch(Exception e){}
+            currentLayer.setParams(toCheck);
+            return true;
         }
         return false;
     }

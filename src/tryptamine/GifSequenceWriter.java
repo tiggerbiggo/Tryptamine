@@ -112,6 +112,7 @@ public class GifSequenceWriter {
   /**
    * Close this GifSequenceWriter object. This does not close the underlying
    * stream, just finishes off the GIF.
+   * @throws IOException Not sure why...? I didn't program this
    */
   public void close() throws IOException {
     gifWriter.endWriteSequence();    
@@ -157,7 +158,7 @@ public class GifSequenceWriter {
     return(node);
   }
   
-  /**
+  /*
   public GifSequenceWriter(
        BufferedOutputStream outputStream,
        int imageType,

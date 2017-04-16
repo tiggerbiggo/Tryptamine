@@ -15,9 +15,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import trypResources.ActionCodes;
 
-/**
+/**A color picker with 3 bars, 3 text fields for entry and a button for displaying the color
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
 public class ColorPicker extends JPanel implements FocusListener, ChangeListener, ActionListener
 {
@@ -25,9 +25,14 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
     JSlider[] sliders;
     JButton colorButton;
     
-    Color C;
+    Color c;
     
-    public ColorPicker(boolean orientation, ActionListener A)
+    /**Creates a new Color Picker
+     * 
+     * @param orientation Whether the elements are arranged to the left or right of the sliders
+     * @param a The action listener of the parent object
+     */
+    public ColorPicker(boolean orientation, ActionListener a)
     {
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -77,27 +82,37 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
         c.gridwidth=3;
         c.weighty=1;
         c.fill = GridBagConstraints.BOTH;
-        colorButton.addActionListener(A);
+        colorButton.addActionListener(a);
         this.add(colorButton, c);
         
         updateColor();
         
     }
     
+    /**Updates the color object based on the values of the sliders
+     * 
+     */
     public void updateColor()
     {
-        C=new Color(sliders[0].getValue(),
+        c=new Color(sliders[0].getValue(),
                     sliders[1].getValue(),
                     sliders[2].getValue());
         
-        if(colorButton != null) colorButton.setBackground(C);
+        if(colorButton != null) colorButton.setBackground(c);
     }
     
+    /**
+     * 
+     * @return The current color
+     */
     public Color getColor()
     {
-        return C;
+        return c;
     }
     
+    /**Parses the user input to get a number, includes validation to check if it's within range and a valid number
+     * 
+     */
     public void parseFields()
     {
         for(int i=0; i<=2; i++)
@@ -139,6 +154,10 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
         parseFields();
     }
 
+    /**Fires when the user changes a slider, updating the color and text fields in real time
+     * 
+     * @param e The event object
+     */
     @Override
     public void stateChanged(ChangeEvent e) 
     {
@@ -155,6 +174,12 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
         updateColor();
     }
     
+    /**Checks if an object passed is the color button
+     * 
+     * @see trypResources.ActionCodes
+     * @param toCheck The object to check
+     * @return A code based on trypResources.ActionCodes
+     */
     public int checkActions(Object toCheck)
     {
         if(toCheck == colorButton)

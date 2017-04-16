@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trypGUI;
 
 import java.awt.Color;
@@ -11,95 +6,109 @@ import java.awt.event.*;
 import javax.swing.*;
 import trypResources.ActionCodes;
 
-/**
+/**A settings window which allows the user to change the name, resolution and file type of the image render
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
-public class Settings implements ActionListener
+public class Settings
 {
     
-    JFrame JF_Settings = new JFrame("Settings");
+    JFrame settingsFrame = new JFrame("Settings");
     
-    JTextField TF_Filename = new JTextField(20);
-    JTextField TF_ResX = new JTextField(5);
-    JTextField TF_ResY = new JTextField(5);
+    JTextField fileNameField = new JTextField(20);
+    JTextField resolutionX = new JTextField(5);
+    JTextField resolutionY = new JTextField(5);
     
-    JRadioButton JR_Gif = new JRadioButton("Gif", true);
-    JRadioButton JR_Png = new JRadioButton("Png", false);
+    JRadioButton gifRadioButton = new JRadioButton("Gif", true);
+    JRadioButton pngRadioButton = new JRadioButton("Png", false);
     
-    ButtonGroup BG = new ButtonGroup();
+    ButtonGroup buttonGroup = new ButtonGroup();
     
-    JButton JB_Apply = new JButton("Apply");
+    JButton applyButton = new JButton("Apply");
     
-    JLabel JL_Filename = new JLabel("File Name:");
-    JLabel JL_Output = new JLabel("Output Type:");
-    JLabel JL_Res = new JLabel("Resolution:");
+    JLabel fileNameLabel = new JLabel("File Name:");
+    JLabel outputLabel = new JLabel("Output Type:");
+    JLabel resLabel = new JLabel("Resolution:");
     
-    JLabel JL_ResX = new JLabel("X");
-    JLabel JL_ResY = new JLabel("Y");
+    JLabel resXLabel = new JLabel("X");
+    JLabel resYLabel = new JLabel("Y");
     
+    /**Initialises the frame and its components
+     * 
+     * @param A The actionListener of the parent class
+     */
     public void initGUI(ActionListener A)
     {
-        JF_Settings.setLayout(null);
-        JF_Settings.setBounds(10, 10, 220, 220);
-        JF_Settings.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JF_Settings.setResizable(false);
-        JF_Settings.setLocationRelativeTo(null);
-        JF_Settings.setVisible(false);
+        settingsFrame.setLayout(null);
+        settingsFrame.setBounds(10, 10, 220, 220);
+        settingsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        settingsFrame.setResizable(false);
+        settingsFrame.setLocationRelativeTo(null);
+        settingsFrame.setVisible(false);
 
-        TF_Filename.setBounds(110, 10, 100, 20);
-        TF_Filename.addActionListener(A);
-        JF_Settings.add(TF_Filename);
-        TF_ResX.setBounds(110, 70, 50, 20);
-        TF_ResX.addActionListener(A);
-        JF_Settings.add(TF_ResX);
-        TF_ResY.setBounds(160, 70, 50, 20);
-        TF_ResY.addActionListener(A);
-        JF_Settings.add(TF_ResY);
+        fileNameField.setBounds(110, 10, 100, 20);
+        fileNameField.addActionListener(A);
+        settingsFrame.add(fileNameField);
+        resolutionX.setBounds(110, 70, 50, 20);
+        resolutionX.addActionListener(A);
+        settingsFrame.add(resolutionX);
+        resolutionY.setBounds(160, 70, 50, 20);
+        resolutionY.addActionListener(A);
+        settingsFrame.add(resolutionY);
         
-        JL_Filename.setBounds(10, 10, 100, 20);
-        JF_Settings.add(JL_Filename);
-        JL_Output.setBounds(10, 40, 100, 20);
-        JF_Settings.add(JL_Output);
-        JL_Res.setBounds(10, 70, 100, 20);
-        JF_Settings.add(JL_Res);
-        JL_ResX.setBounds(125, 90, 20, 20);
-        JF_Settings.add(JL_ResX);
-        JL_ResY.setBounds(175, 90, 20, 20);
-        JF_Settings.add(JL_ResY);
+        fileNameLabel.setBounds(10, 10, 100, 20);
+        settingsFrame.add(fileNameLabel);
+        outputLabel.setBounds(10, 40, 100, 20);
+        settingsFrame.add(outputLabel);
+        resLabel.setBounds(10, 70, 100, 20);
+        settingsFrame.add(resLabel);
+        resXLabel.setBounds(125, 90, 20, 20);
+        settingsFrame.add(resXLabel);
+        resYLabel.setBounds(175, 90, 20, 20);
+        settingsFrame.add(resYLabel);
         
-        JR_Gif.setBounds(110, 40, 50, 20);
-        JR_Gif.setMargin(new Insets(0, 0, 0, 0));
-        JR_Gif.addActionListener(A);
-        BG.add(JR_Gif);
-        JF_Settings.add(JR_Gif);
+        gifRadioButton.setBounds(110, 40, 50, 20);
+        gifRadioButton.setMargin(new Insets(0, 0, 0, 0));
+        gifRadioButton.addActionListener(A);
+        buttonGroup.add(gifRadioButton);
+        settingsFrame.add(gifRadioButton);
         
         
-        JR_Png.setBounds(160, 40, 50, 20);
-        JR_Png.setMargin(new Insets(0, 0, 0, 0));
-        JR_Png.addActionListener(A);
-        BG.add(JR_Png);
-        JF_Settings.add(JR_Png);
+        pngRadioButton.setBounds(160, 40, 50, 20);
+        pngRadioButton.setMargin(new Insets(0, 0, 0, 0));
+        pngRadioButton.addActionListener(A);
+        buttonGroup.add(pngRadioButton);
+        settingsFrame.add(pngRadioButton);
         
-        JB_Apply.setBounds(10, 110, 200, 20);
-        JB_Apply.setMargin(new Insets(0, 0, 0, 0));
-        JB_Apply.addActionListener(A);
-        JF_Settings.add(JB_Apply);
+        applyButton.setBounds(10, 110, 200, 20);
+        applyButton.setMargin(new Insets(0, 0, 0, 0));
+        applyButton.addActionListener(A);
+        settingsFrame.add(applyButton);
         
     }
     
+    /**
+     * 
+     * @see trypResources.ActionCodes
+     * @param toCheck The object to check against elements in this class
+     * @return An action code based on trypResources.ActionCodes
+     */
     public int checkActions(Object toCheck)
     {
         checkFields();
-        if(toCheck == TF_Filename) return ActionCodes.CODE_SETTINGS_FILENAME;
-        else if (toCheck == TF_ResX) return ActionCodes.CODE_SETTINGS_RESX;
-        else if (toCheck == TF_ResY) return ActionCodes.CODE_SETTINGS_RESY;
-        else if (toCheck == JR_Gif) return ActionCodes.CODE_SETTINGS_GIF;
-        else if (toCheck == JR_Png) return ActionCodes.CODE_SETTINGS_PNG;
-        else if (toCheck == JB_Apply) return ActionCodes.CODE_SETTINGS_APPLY;
+        if(toCheck == fileNameField) return ActionCodes.CODE_SETTINGS_FILENAME;
+        else if (toCheck == resolutionX) return ActionCodes.CODE_SETTINGS_RESX;
+        else if (toCheck == resolutionY) return ActionCodes.CODE_SETTINGS_RESY;
+        else if (toCheck == gifRadioButton) return ActionCodes.CODE_SETTINGS_GIF;
+        else if (toCheck == pngRadioButton) return ActionCodes.CODE_SETTINGS_PNG;
+        else if (toCheck == applyButton) return ActionCodes.CODE_SETTINGS_APPLY;
         else return ActionCodes.NULLCODE;
     }
     
+    /**Checks user input and highlights incorrect fields
+     * 
+     * @return True if all fields valid, else false
+     */
     public boolean checkFields()
     {
         boolean isValid = true;
@@ -111,42 +120,42 @@ public class Settings implements ActionListener
         Color normal = Color.white;
         
         
-        if(TF_Filename.getText().length()>maxFilenameLength)
+        if(fileNameField.getText().length()>maxFilenameLength)
         {
-            TF_Filename.setBackground(error);
+            fileNameField.setBackground(error);
             isValid = false;
         }
-        else TF_Filename.setBackground(normal);
+        else fileNameField.setBackground(normal);
         
         try
         {
-            int tmp = Integer.parseInt(TF_ResX.getText());
+            int tmp = Integer.parseInt(resolutionX.getText());
             if(tmp >maxRes && tmp >=1)
             {
-                TF_ResX.setBackground(error);
+                resolutionX.setBackground(error);
                 isValid = false;
             }
-            else TF_ResX.setBackground(normal);
+            else resolutionX.setBackground(normal);
         }
         catch(NumberFormatException e)
         {
-            TF_ResX.setBackground(error);
+            resolutionX.setBackground(error);
             isValid = false;
         }
         
         try
         {
-            int tmp = Integer.parseInt(TF_ResY.getText());
+            int tmp = Integer.parseInt(resolutionY.getText());
             if(tmp >maxRes && tmp >=1)
             {
-                TF_ResY.setBackground(error);
+                resolutionY.setBackground(error);
                 isValid = false;
             }
-            else TF_ResY.setBackground(normal);
+            else resolutionY.setBackground(normal);
         }
         catch(NumberFormatException e)
         {
-            TF_ResY.setBackground(error);
+            resolutionY.setBackground(error);
             isValid = false;
         }
         
@@ -154,45 +163,59 @@ public class Settings implements ActionListener
         
     }
     
+    /**
+     * Displays the JFrame
+     */
     public void show()
     {
-        JF_Settings.setVisible(true);
+        settingsFrame.setVisible(true);
     }
     
+    /**
+     * 
+     * @return The X resolution input by the user, -1 if invalid
+     */
     public int getResX()
     {
         if(checkFields())
         {
-            return Integer.parseInt(TF_ResX.getText());
+            return Integer.parseInt(resolutionX.getText());
         }
         return -1;
     }
     
+    /**
+     * 
+     * @return The Y resolution input by the user, -1 if invalid
+     */
     public int getResY()
     {
         if(checkFields())
         {
-            return Integer.parseInt(TF_ResY.getText());
+            return Integer.parseInt(resolutionY.getText());
         }
         return -1;
     }
     
+    /**
+     * 
+     * @return The file name input by the user, null if invalid
+     */
     public String getFilename()
     {
         if(checkFields())
         {
-            return TF_Filename.getText();
+            return fileNameField.getText();
         }
         return null;
     }
     
+    /**
+     * 
+     * @return The state of the Gif radio button
+     */
     public boolean getGif()
     {
-        return JR_Gif.isSelected();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
+        return gifRadioButton.isSelected();
     }
 }

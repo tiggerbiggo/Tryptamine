@@ -5,7 +5,6 @@
  */
 package trypComponents;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,18 +21,22 @@ import javax.swing.event.ChangeListener;
 import trypResources.ActionCodes;
 import trypResources.Tools;
 
-/**
+/**A prefab panel containing various buttons and sliders used to edit and create gradients
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
 public class GradientPanel extends JPanel implements ActionListener, ChangeListener, FocusListener
 {
     JSlider[] sliders;
     JTextField[] fields;
-    JButton JB_Make, JB_SelectStart, JB_SelectEnd;
+    JButton makeButton, startButton, endButton;
     
     int min, max;
     
+    /**Creates a new gradient panel
+     * 
+     * @param A The action listener of the parent object
+     */
     public GradientPanel(ActionListener A)
     {
         this.setLayout(new GridBagLayout());
@@ -68,32 +71,32 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         fields[1].addFocusListener(this);
         fields[1].addActionListener(this);
         
-        JB_Make = new JButton("Make Gradient");
-        JB_Make.addActionListener(A);
+        makeButton = new JButton("Make Gradient");
+        makeButton.addActionListener(A);
         
-        JB_SelectStart = new JButton("Select Start");
-        JB_SelectStart.addActionListener(A);
+        startButton = new JButton("Select Start");
+        startButton.addActionListener(A);
         
-        JB_SelectEnd = new JButton("Select End");
-        JB_SelectEnd.addActionListener(A);
+        endButton = new JButton("Select End");
+        endButton.addActionListener(A);
         
         
         c.gridx=0;
         c.gridy=0;
-        this.add(JB_SelectStart,c);
+        this.add(startButton,c);
         
         
         
         c.gridx=2;
         c.gridy=0;
         c.gridheight=2;
-        this.add(JB_Make,c);
+        this.add(makeButton,c);
         
         c.gridheight=1;
         
         c.gridx=4;
         c.gridy=0;
-        this.add(JB_SelectEnd,c);
+        this.add(endButton,c);
         
         c.gridx=1;
         c.gridy=0;
@@ -117,17 +120,25 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         setAllEnabled(true);
     }
     
+    /**Sets the enabled state of all the elements in the panel based on the parameter passed
+     * 
+     * @param state The state to set the elements to
+     */
     public void setAllEnabled(boolean state)
     {
         sliders[0].setEnabled(state);
         sliders[1].setEnabled(state);
         fields[0].setEnabled(state); 
         fields[1].setEnabled(state);
-        JB_Make.setEnabled(state);
-        JB_SelectStart.setEnabled(state);
-        JB_SelectEnd.setEnabled(state);
+        makeButton.setEnabled(state);
+        startButton.setEnabled(state);
+        endButton.setEnabled(state);
     }
 
+    /**Sets the maximum index the sliders and text boxes will allow
+     * 
+     * @param max The maximum index
+     */
     public void setMax(int max)
     {
         this.max=max;
@@ -140,6 +151,9 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         }
     }
 
+    /**Updates the text fields based on the slider values, also contains validation so min can never be more than max
+     * 
+     */
     public void updateFields()
     {
         if(sliders[0].getValue()>=sliders[1].getValue())
@@ -154,6 +168,12 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         fields[1].setText(""+sliders[1].getValue());
     }
     
+    /**Parses a text field to get the int value it contains
+     * 
+     * TODO: Take a look at this one, it's probably not done right...
+     * @param JT The textField to parse
+     * @return The int value contained in the field, -1 if invalid
+     */
     public int parseField(JTextField JT)
     {
         try
@@ -166,6 +186,9 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         return -1;
     }
     
+    /**Performs an integer parse on the text fields and sets the values of the sliders and fields according to the value entered
+     * 
+     */
     public void parseFields()
     {
         int[] toCheck = new int[2];
@@ -221,20 +244,26 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
     {
         parseFields();
     }
-
+    
+    /**Checks an object against the buttons and sliders to check if it matches
+     * 
+     * @see trypResources.ActionCodes
+     * @param toCheck The object to check
+     * @return A code based on trypResources.ActionCodes
+     */
     public int checkActions(Object toCheck) 
     {
         Tools.p("Action Triggered");
-        if(toCheck == JB_SelectStart)
+        if(toCheck == startButton)
         {
             return ActionCodes.CODE_GRADIENTPANEL_SELECTSTART;
         }
-        else if(toCheck == JB_SelectEnd)
+        else if(toCheck == endButton)
         {
             Tools.p("Selected End");
             return ActionCodes.CODE_GRADIENTPANEL_SELECTEND;
         }
-        else if(toCheck == JB_Make)
+        else if(toCheck == makeButton)
         {
             
             return ActionCodes.CODE_GRADIENTPANEL_MAKE;
@@ -242,6 +271,10 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         return ActionCodes.NULLCODE;
     }
 
+    /**Sets the start value of the sliders and fields
+     * 
+     * @param val The value to set
+     */
     public void setStart(int val) 
     {
         if(val>sliders[1].getValue())
@@ -253,6 +286,10 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         updateFields();
     }
     
+    /**Sets the end value of the sliders and fields
+     * 
+     * @param val The value to set
+     */
     public void setEnd(int val) 
     {
         if(val<sliders[0].getValue())

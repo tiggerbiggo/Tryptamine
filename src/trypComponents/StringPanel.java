@@ -1,13 +1,15 @@
 package trypComponents;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class StringPanel extends JPanel implements ActionListener
+/**A panel allowing the user to enter a string
+ * 
+ * @author tiggerbiggo
+ */
+public class StringPanel extends JPanel
 {
     String text;
     
@@ -20,12 +22,19 @@ public class StringPanel extends JPanel implements ActionListener
         init();
     }
     
+    /**
+     * 
+     * @return The string entered in the text field
+     */
     public String getString()
     {
         return JT_Field.getText();
         
     }
     
+    /**Sets the layout of components in the panel
+     * 
+     */
     public void init()
     {
         this.setLayout(new GridLayout(0,1));
@@ -33,16 +42,9 @@ public class StringPanel extends JPanel implements ActionListener
         JL_Text = new JLabel(text);
         
         JT_Field = new JTextField();
-        JT_Field.addActionListener(this);
         
         this.add(JL_Text);
         
         this.add(JT_Field);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        
     }
 }

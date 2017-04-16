@@ -5,12 +5,14 @@
  */
 package trypLayerPanels;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import trypComponents.*;
 import trypGenerators.Gen_Formula;
 import trypParams.Parameter;
-import trypResources.Formula;
-import trypResources.Function;
+import trypFormula.Formula;
+import trypFormula.Function;
+import trypFormula.Operation;
 import tryptamine.GapPresets;
 
 /**
@@ -24,7 +26,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
     BooleanPanel[] bPanels;
     IntegerPanel colorSpeed;
     GapPanel gapPanel;
-    StringPanel formulaPanel;
+    FormulaPresetBar formulaPanel;
     
     @Override
     public Parameter[] getParams() 
@@ -32,8 +34,11 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         //hv, dir, colorspeed, gaps, formula
         try
         {
-            Formula F = new Formula(Function.SIN);
+            Formula F = new Formula(Function.SIN, new Formula(Function.COS), Operation.ADD);
             F.setCoeff(20);
+            F.setFreq(0.1);
+            F.getNext().setCoeff(10);
+            F.getNext().setFreq(0.2);
             return Gen_Formula.constructParams(
                     bPanels[0].getBoolean(), 
                     bPanels[0].getBoolean(), 
@@ -53,6 +58,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         //
         this.setLayout(new GridLayout(0,1));
         
+        this.setPreferredSize(new Dimension(300,200));
         String[][] labelNames = 
         {
             {"Horizontal", "Vertical"},
@@ -71,7 +77,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         gapPanel = new GapPanel();
         this.add(gapPanel);
         
-        formulaPanel = new StringPanel("Formula");
+        formulaPanel = new FormulaPresetBar();
         this.add(formulaPanel);
     }
 
