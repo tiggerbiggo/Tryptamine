@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package trypListModels;
 
 import javax.swing.AbstractListModel;
@@ -7,7 +12,7 @@ import trypResources.Layer;
  *
  * @author amnesia
  */
-public class LayerListModel extends AbstractListModel
+public class layerListModel extends AbstractListModel
 {
     Layer[] layers;
     
@@ -30,18 +35,6 @@ public class LayerListModel extends AbstractListModel
         }
     }
     
-    public boolean checkIndex(int index)
-    {
-        return index>=0 && index<getSize();
-    }
-    
-    public void setElement(int index, Layer layer)
-    {
-        if(checkIndex(index) && layer != null)
-        {
-            layers[index] = layer;
-        }
-    }
     
     @Override
     public int getSize() 
@@ -50,13 +43,13 @@ public class LayerListModel extends AbstractListModel
         {
             return layers.length;
         }
-        else return 0;
+        else return -1;
     }
 
     @Override
     public Object getElementAt(int index) 
     {
-        if(layers != null && checkIndex(index))
+        if(layers != null && index >=0 && index<layers.length)
         {
             return layers[index];
         }
@@ -68,23 +61,4 @@ public class LayerListModel extends AbstractListModel
         return layers;
     }
     
-    public void removeElement(int index)
-    {
-        if(checkIndex(index))
-        {
-            Layer[] tmpLayer = new Layer[layers.length-1];
-            for(int i=0;i<layers.length-1;i++)
-            {
-                if(i<index)
-                {
-                    tmpLayer[i]=layers[i];
-                }
-                else
-                {
-                    tmpLayer[i]=layers[i+1];
-                }
-            }
-            layers=tmpLayer;
-        }
-    }
 }
