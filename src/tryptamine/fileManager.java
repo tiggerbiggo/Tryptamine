@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.stream.*;
 import javax.imageio.*;
 import java.io.*;
+import java.util.ArrayList;
 
 /**This class manages the output of images and animated Gif files
  *
@@ -35,15 +36,18 @@ public class fileManager
      * @param sequence
      * @param filename
      */
-    public static void writeSequence(BufferedImage[] sequence, String filename)
+    public static void writeSequence(ArrayList<BufferedImage> sequence, String filename)
     {
-        if(sequence != null)
+        try
         {
-            for(int i=0; i<sequence.length; i++)
+            int i=0;
+            for(BufferedImage img : sequence)
             {
-                write(sequence[i], filename + i);
+                write(img, filename + i);
+                i++;
             }
         }
+        catch(Exception e){}
     }
     
     /**Writes a Gif
@@ -61,7 +65,7 @@ public class fileManager
      * @param imgSequence A sequence of BufferedImage objects to output
      * @param filename The name of the Gif to output
      */
-    public static void writeGif(BufferedImage[] imgSequence, String filename)
+    public static void writeGif(ArrayList<BufferedImage> imgSequence, String filename)
     {
         try
         {
@@ -77,8 +81,6 @@ public class fileManager
         }
         catch(Exception e)
         {
-            //oops
-            System.out.println("OH NO");
             e.printStackTrace();
         }
     }

@@ -8,6 +8,7 @@ package tryptamine;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  *
@@ -42,17 +43,16 @@ public class ImageManager
         }
     }
     
-    public static BufferedImage[] constructSequence(DynamicCanvas DC)
+    public static ArrayList<BufferedImage> constructSequence(DynamicCanvas DC)
     {
         int pNum = DC.getPalette(0).getNum()-1;
         
-        BufferedImage[] ImageSequence = new BufferedImage[pNum+1];
+        ArrayList<BufferedImage> ImageSequence = new ArrayList();
         for(int o=0; o<=pNum; o++)
         {
             
-            System.out.println("Constructing image: "+o+" of "+pNum);
             
-            ImageSequence[o] = ImageManager.constructImage(DC, DC.getX(), DC.getY());
+            ImageSequence.add(ImageManager.constructImage(DC, DC.getX(), DC.getY()));
             DC.cycleAll(1);
         }
         return ImageSequence;

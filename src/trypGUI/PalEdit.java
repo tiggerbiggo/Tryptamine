@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -158,6 +159,12 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         updatePaletteList();
     }
     
+    public void addPaletteList(ArrayList<Palette> P)
+    {
+        PLM.addList(P);
+        updatePaletteList();
+    }
+    
     public void updatePaletteList()
     {
         JS_PaletteScroll.removeAll();
@@ -175,7 +182,6 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         {
             for(int i=0; i<CB.getNum(); i++)
             {
-                System.out.println("Setting Color: " + i + ", " + (i+barIndex));
                 CB.setColor(i, currentPalette.getColor(i+barIndex), i+barIndex);
                 if(i+barIndex == barSelected)   CB.setText(i, "*"+barSelected+"*");
             }
@@ -244,7 +250,6 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         tmp=GP.checkActions(toCheck);
         if(tmp != ActionCodes.NULLCODE)
         {
-            System.out.println(tmp);
             switch(tmp)
             {
                 case ActionCodes.CODE_GRADIENTPANEL_SELECTSTART:
@@ -282,10 +287,9 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     {
         barIndex = JSL_ColorIndex.getValue();
         updateColorBar();
-        System.out.println(barIndex);
     }
     
-    public Palette[] getPalettes()
+    public ArrayList<Palette> getPalettes()
     {
         return PLM.getList();
     }

@@ -24,7 +24,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
     BooleanPanel[] bPanels;
     IntegerPanel colorSpeed;
     GapPanel gapPanel;
-    StringPanel formulaPanel;
+    FormulaPresetBar presets;
     
     @Override
     public Parameter[] getParams() 
@@ -39,7 +39,7 @@ public class FormulaLayerPanel extends AbstractLayerPanel
                     bPanels[0].getBoolean(), 
                     colorSpeed.getInt(), 
                     gapPanel.getGaps(), 
-                    F);
+                    presets.getFormula());
         }
         catch(Exception e)
         {
@@ -71,8 +71,8 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         gapPanel = new GapPanel();
         this.add(gapPanel);
         
-        formulaPanel = new StringPanel("Formula");
-        this.add(formulaPanel);
+        presets = new FormulaPresetBar();
+        this.add(presets);
     }
 
     @Override
@@ -83,10 +83,13 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         {
             bPanels[0].setBoolean(params[0].getBoolean());
             bPanels[1].setBoolean(params[1].getBoolean());
-            System.out.println(Boolean.toString(params[0].getBoolean()));
             
             colorSpeed.setInt(params[2].getInt());
             gapPanel.setSelected(GapPresets.parseArray(params[3].getIntArray()));
+            double coeff = params[4].getFormula().getCoeff();
+            double freq = params[4].getFormula().getFreq();
+            int selected = params[4].getFormula().getSelected();
+            presets.setAll(coeff, freq, selected);
         }
     }
     

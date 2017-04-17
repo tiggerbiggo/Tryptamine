@@ -4,7 +4,8 @@ package tryptamine;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JFrame;
+import java.util.ArrayList;
+import java.util.Random;
 import trypGUI.*;
 import trypGenerators.*;
 import trypParams.Parameter;
@@ -24,7 +25,7 @@ public class GUIManager implements ActionListener {
     PalEdit PE = new PalEdit();
     LayerEdit LE = new LayerEdit();
     
-    Palette[] palettes;
+    ArrayList<Palette> palettes;
     int[] paletteNums;
     
     Layer[] layers;
@@ -49,16 +50,24 @@ public class GUIManager implements ActionListener {
         
         int PLength = 40;
         
-        palettes = new Palette[3];
-        palettes[0]=new Palette(PLength,0);
+        palettes = new ArrayList();
         
-        palettes[0].setGradient(0, PLength-1, Color.blue, Color.white);
         
-        palettes[1] = new Palette(PLength, 0);
-        palettes[1].setGradient(0, PLength-1, Color.black, Color.green);
-        
-        palettes[2] = new Palette(PLength, 0);
-        palettes[2].setGradient(0, PLength-1, Color.red, Color.blue);
+        for(int i=0;i<3;i++)
+        {
+            Random r = new Random();
+            Palette P = new Palette(PLength,0);
+            P.setGradient(0, PLength-1, 
+                    new Color(
+                            r.nextInt(255),
+                            r.nextInt(255),
+                            r.nextInt(255)), 
+                    new Color(
+                            r.nextInt(255),
+                            r.nextInt(255),
+                            r.nextInt(255)));
+            palettes.add(P);
+        }
         
         DynamicCanvas DC = new DynamicCanvas(500, 500, palettes);
         
@@ -102,8 +111,7 @@ public class GUIManager implements ActionListener {
         S.show();
         
         PE.show();
-        PE.addPalette(palettes[0]);
-        PE.addPalette(palettes[1]);
+        PE.addPaletteList(palettes);
         
         LE.show();
         
@@ -153,7 +161,7 @@ public class GUIManager implements ActionListener {
         } while (code >= 0);
     }
     
-    public BufferedImage[] drawPreview(Viewport VP, Palette[] P, AbstractGenerator[] gens)
+    public ArrayList<BufferedImage> drawPreview(Viewport VP, ArrayList<Palette> P, AbstractGenerator[] gens)
     {
         return ImageManager.constructSequence(CanvasWriter.draw(new DynamicCanvas(
                                 VP.getWidth(), 
@@ -166,9 +174,6 @@ public class GUIManager implements ActionListener {
     public synchronized void actionPerformed(ActionEvent e) {
         Object toCheck = e.getSource();
 
-        System.out.println("Action performed: " + toCheck);
-        
-        //System.out.println(toCheck.);
         
         
         

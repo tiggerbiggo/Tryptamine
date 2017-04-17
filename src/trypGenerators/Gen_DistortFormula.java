@@ -161,7 +161,6 @@ public class Gen_DistortFormula extends AbstractGenerator
         
         if(Integer.signum(num)==-1)
         {
-            System.out.println("NEGATIVE NUM");
         }
         
         if(HV) 

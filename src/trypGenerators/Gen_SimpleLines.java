@@ -62,7 +62,6 @@ public class Gen_SimpleLines extends AbstractGenerator
                 c=0;
                 n++;
                 DC = lineDraw(DC, HV, colorSpeed, i, startPos, PaletteNum);
-                System.out.println("DREW");
             }
         }
         
@@ -85,11 +84,9 @@ public class Gen_SimpleLines extends AbstractGenerator
                 this.dir=params[1].getBoolean();
                 this.colorSpeed=params[2].getInt();
                 this.gaps=params[3].getIntArray();
-                System.out.println("All Set");
                 return true;
             }
         }
-        System.out.println("Returned False");
         return false;
     }
 

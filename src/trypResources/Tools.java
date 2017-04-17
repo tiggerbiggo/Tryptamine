@@ -13,6 +13,5 @@ public class Tools
 {
     public static void p(String s)
     {
-        System.out.println(s);
     }
 }

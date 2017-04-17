@@ -5,6 +5,7 @@
  */
 package trypListModels;
 
+import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 import trypResources.Palette;
 
@@ -14,49 +15,51 @@ import trypResources.Palette;
  */
 public class PaletteListModel extends AbstractListModel
 {
-    Palette[] palettes;
+    ArrayList<Palette> palettes;
+    
+    public PaletteListModel()
+    {
+        palettes = new ArrayList();
+    }
     
     public void add(Palette P)
     {
-        if(palettes != null)
+        try
         {
-            Palette[] temp = new Palette[palettes.length+1];
-            for(int i=0; i<palettes.length; i++)
-            {
-                temp[i]=palettes[i];
-            }
-            temp[temp.length-1]=P;
-            palettes=temp;
+            palettes.add(P);
         }
-        else 
-        {
-            palettes = new Palette[1];
-            palettes[0]=P;
-        }
+        catch(Exception e){}
     }
     
+    public void addList(ArrayList<Palette> palettes)
+    {
+        try
+        {
+            for(Palette p : palettes)
+            {
+                this.palettes.add(p);
+            }
+        }
+        catch(Exception e){}
+    }
     
     @Override
     public int getSize() 
     {
-        if(palettes != null)
-        {
-            return palettes.length;
-        }
-        else return -1;
+        return palettes.size();
     }
 
     @Override
     public Object getElementAt(int index) 
     {
-        if(palettes != null && index >=0 && index<palettes.length)
+        try
         {
-            return palettes[index];
+            return palettes.get(index);
         }
-        else return null;
+        catch(Exception e){return null;}
     }
     
-    public Palette[] getList()
+    public ArrayList<Palette> getList()
     {
         return palettes;
     }

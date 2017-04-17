@@ -2,11 +2,12 @@ package tryptamine;
 import trypResources.Palette;
 import trypResources.PaletteReference;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class DynamicCanvas 
 {
     int x, y, paletteNum;
-    Palette[] Palettes;
+    ArrayList<Palette> Palettes;
     PaletteReference[][] PR;
     
     Color BG = Color.BLACK;
@@ -27,7 +28,7 @@ public class DynamicCanvas
         initCanvas();
     }*/
 
-    public DynamicCanvas(int x, int y, Palette[] Palettes) throws IllegalArgumentException
+    public DynamicCanvas(int x, int y, ArrayList<Palette> Palettes) throws IllegalArgumentException
     {
         if(checkValid(x) && checkValid(y))
         {
@@ -38,7 +39,7 @@ public class DynamicCanvas
         
         this.Palettes = Palettes;
         
-        paletteNum=Palettes.length;
+        paletteNum=Palettes.size();
         
         PR = new PaletteReference[x][y];
         
@@ -54,8 +55,8 @@ public class DynamicCanvas
         }
         else throw new IllegalArgumentException("Cannot have negative x or y");
         
-        this.Palettes = new Palette[1];
-        Palettes[0] = P;
+        this.Palettes = new ArrayList();
+        Palettes.add(P);
         
         paletteNum=1;
         
@@ -94,10 +95,11 @@ public class DynamicCanvas
             PaletteReference temp = PR[x][y];
             int PI=temp.getPaletteIndex();
             int CI=temp.getColorIndex();
-            if(checkColorIndex(PI, CI))
+            try
             {
-                return Palettes[PI].getColor(CI);
+                return Palettes.get(PI).getColor(CI);
             }
+            catch(Exception e){}
         }
         return null;
     }
@@ -127,13 +129,13 @@ public class DynamicCanvas
         }
     }
     
-    public int normalize(int num, int index)
+    public int normalizePalette(int num, int index)
     {
-        if(checkPaletteIndex(index))
+        try
         {
-            return Palettes[index].normalize(num);
+            return Palettes.get(index).normalize(num);
         }
-        return -1;
+        catch(Exception e){return -1;}
     }
     
     public int normalizeX(int num)
@@ -164,11 +166,11 @@ public class DynamicCanvas
     
     public void draw(int x, int y, int paletteIndex, int colorIndex)
     {
-        if(checkDimensions(x, y) && checkColorIndex(paletteIndex, colorIndex))
+        try
         {
-            //System.out.println("VALID: " + x + ", " + y);
             PR[x][y]=new PaletteReference(colorIndex, paletteIndex);
         }
+        catch(Exception e){}
     }
     
     public void setReference(int x, int y, PaletteReference ref)
@@ -180,11 +182,11 @@ public class DynamicCanvas
     
     public Palette getPalette(int index)
     {
-        if(checkPaletteIndex(index))
+        try
         {
-            return Palettes[index];
+            return Palettes.get(index);
         }
-        else return null;
+        catch(Exception e){return null;}
     }
     
     
@@ -199,17 +201,5 @@ public class DynamicCanvas
         return x>=0 && x<this.x && y>=0 && y<this.y;
     }
     
-    private boolean checkPaletteIndex(int PI)
-    {
-        return PI>=0 && PI<paletteNum;
-    }
     
-    private boolean checkColorIndex(int PI, int CI)
-    {
-        if(checkPaletteIndex(PI))
-        {
-            return Palettes[PI].checkRange(CI);
-        }
-        return false;
-    }
 }

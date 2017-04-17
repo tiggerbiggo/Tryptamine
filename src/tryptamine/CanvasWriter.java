@@ -11,16 +11,6 @@ public class CanvasWriter
     
     public DynamicCanvas draw(DynamicCanvas DC, int[] PaletteNums)
     {
-        if(gens != null && 
-                PaletteNums != null && 
-                PaletteNums.length>=gens.length)
-        {
-            for(int i=0; i<gens.length; i++)
-            {
-                DC = gens[i].draw(DC, PaletteNums[i]);
-            }
-        }
-        else System.out.println("nope");
         
         
         return DC;
@@ -36,6 +26,19 @@ public class CanvasWriter
             for(int i=0; i<gens.length; i++)
             {
                 DC = gens[i].draw(DC, PaletteNums[0]);
+            }
+        }
+        return DC;
+    }
+    
+    public static DynamicCanvas draw(DynamicCanvas DC, AbstractGenerator[] gens, int PaletteNum)
+    {
+        if(gens != null && 
+                checkGenerators(gens))
+        {
+            for(int i=0; i<gens.length; i++)
+            {
+                DC = gens[i].draw(DC, PaletteNum);
             }
         }
         return DC;
