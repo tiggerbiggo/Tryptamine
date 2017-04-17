@@ -1,7 +1,10 @@
 package trypGUI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -9,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,6 +35,8 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
     LayerListModel listModel;
 
     AbstractLayerPanel layerPanel;
+    
+    JPanel layerContainer;
 
     JButton[] buttons;
 
@@ -45,84 +51,52 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
 
     public void initGUI(ActionListener A) {
         layerFrame = new JFrame("Layers");
-        layerFrame.setLayout(new GridBagLayout());//new GridBagLayout()
-        layerFrame.setBounds(10, 10, 500, 500);
+        layerFrame.setLayout(null);
+        layerFrame.setBounds(10, 10, 520, 540);
         layerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        layerFrame.setResizable(false);
+        layerFrame.setResizable(true);
         layerFrame.setLocationRelativeTo(null);
         layerFrame.setVisible(false);
 
-        panelConstraints = new GridBagConstraints();
-        panelConstraints.gridwidth = 2;
-        panelConstraints.gridheight = 1;
-        panelConstraints.gridx = 2;
-        panelConstraints.gridy = 2;
-        panelConstraints.fill = GridBagConstraints.BOTH;
-        panelConstraints.weighty=1;
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.weightx = 1;
-        c.weighty = 1;
-
         layerScroll = new JScrollPane();
+        layerScroll.setBounds(0, 0, 200, 460);
 
-        c.gridwidth = 2;
-        c.gridheight = 3;
-        c.fill = GridBagConstraints.BOTH;
-
-        layerFrame.add(layerScroll, c);
-
-        c.gridwidth = 1;
-        c.gridheight = 1;
-
+        layerFrame.add(layerScroll);
+        
         typeLabel = new JLabel("Type:");
+        typeLabel.setBounds(200,0,100,30);
+        layerFrame.add(typeLabel);
+        
         paletteLabel = new JLabel("Palette");
+        paletteLabel.setBounds(200,30,100,30);
+        layerFrame.add(paletteLabel);
 
-        c.gridx = 2;
-        c.fill = GridBagConstraints.BOTH;
-
-        layerFrame.add(typeLabel, c);
-
-        c.gridy = 1;
-
-        layerFrame.add(paletteLabel, c);
-
-        c.gridx = 2;
-        c.gridy = 2;
-        c.gridwidth = 2;
-
+        layerContainer = new JPanel();
+        layerContainer.setBounds(200,60,300,400);
+        layerContainer.setBackground(Color.red);
+        layerContainer.setLayout(new GridLayout(1,1));
+        layerFrame.add(layerContainer);
+        
         layerPanel = new NullLayerPanel();
-
-        layerFrame.add(layerPanel, c);
-
-        c.gridwidth = 1;
+        layerContainer.add(layerPanel);
 
         typeComboBox = new JComboBox(GenType.TYPENAMES);
         typeComboBox.addActionListener(this);
+        typeComboBox.setBounds(300, 0, 200, 30);
+        layerFrame.add(typeComboBox);
         
         paletteComboBox = new JComboBox();
         paletteComboBox.addActionListener(this);
-        
-        c.gridx = 3;
-        c.gridy = 0;
-
-        layerFrame.add(typeComboBox, c);
-
-        c.gridy = 1;
-
-        layerFrame.add(paletteComboBox, c);
+        paletteComboBox.setBounds(300, 30, 200, 30);
+        layerFrame.add(paletteComboBox);
 
         String[] buttonText = {"New", "Delete", "Save", "Cancel"};
         buttons = new JButton[4];
-
-        c.gridy = 3;
-        c.weighty = 0.05;
         for (int i = 0; i <= 3; i++) {
             buttons[i] = new JButton(buttonText[i]);
             buttons[i].addActionListener(this);
-            c.gridx = i;
-            layerFrame.add(buttons[i], c);
+            buttons[i].setBounds(i*125, 460, 125, 40);
+            layerFrame.add(buttons[i]);
         }
         listModel = new LayerListModel();
         selectedIndex=-1;
@@ -178,7 +152,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
     
     public void updateLayerPanel(int type)
     {
-        layerFrame.remove(layerPanel);
+        layerContainer.remove(layerPanel);
         layerPanel = GenType.getPanel(type);
         layerPanel.initGUI();
         
@@ -187,9 +161,10 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
             layerPanel.setParams(currentLayer.getParams());
         }
         
-        layerFrame.add(layerPanel, panelConstraints);
-        layerFrame.repaint();
+        layerContainer.add(layerPanel, panelConstraints);
+        
         layerFrame.revalidate();
+        layerFrame.repaint();
     }
 
     public void updateType()

@@ -5,11 +5,10 @@
  */
 package trypGUI;
 
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import trypResources.ActionCodes;
@@ -25,26 +24,22 @@ public class Viewport implements ActionListener
     JButton JB_Render = new JButton("Render Image");
     JButton JB_Refresh = new JButton("Refresh");
     
-    Image[] images;
+    ArrayList<BufferedImage> images;
     int currentImage = 0;
     
-    public void setImages(BufferedImage[] images) {
-        this.images = (Image[])images;
+    public void setImages(ArrayList<BufferedImage> images) {
+        this.images = images;
         currentImage = 0;
         drawImage();
     }
 
     public void addImage(BufferedImage toAdd) {
 
-        if (images != null) {
-            Image[] temp = images;
-            images = new Image[images.length + 1];
-            for (int i = 0; i <= temp.length; i++) {
-                images[i] = temp[i];
-            }
-            images[images.length] = (Image)toAdd;
-            drawImage();
+        try
+        {
+            images.add(toAdd);
         }
+        catch(Exception e){}
     }
 
     
@@ -56,22 +51,8 @@ public class Viewport implements ActionListener
     
     public void setImageIndex(int index) 
     {
-        currentImage = index;
-        if (checkImageNumber()) 
-        {
-            //All is well!
-        } 
-        else if(imagesExist())
-        {
-            //Overflow
-            currentImage = normalize(currentImage, images.length);
-        }
-        else 
-        {
-            //No images exist
-        }
+        currentImage = normalize(index, images.size());
         
-        System.out.println("Image Index: " + currentImage);
     }
     
     public boolean imagesExist()
@@ -79,10 +60,6 @@ public class Viewport implements ActionListener
         return images!=null;
     }
     
-    public boolean imagesExist(int n)
-    {
-        return images[n]!=null;
-    }
 
     public int normalize(int toNormalize, int normal) 
     {
@@ -105,21 +82,13 @@ public class Viewport implements ActionListener
     public void drawImage() 
     {
         
-        if (checkImageNumber() && checkGraphics()) 
+        try
         {
-            JF_Viewport.getGraphics().drawImage(images[currentImage], 0, 0, null);
+            JF_Viewport.getGraphics().drawImage(images.get(currentImage), 0, 0, null);
             JB_Render.repaint();
             JB_Refresh.repaint();
         }
-    }
-
-    public boolean checkImageNumber() 
-    {
-        if(imagesExist())
-        {
-            return currentImage < images.length && currentImage >= 0;
-        }
-        else return false;
+        catch(Exception e){}
     }
     
     public void initGUI(ActionListener A) 

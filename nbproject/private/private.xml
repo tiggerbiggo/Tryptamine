@@ -3,11 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/TrypGit/Tryptamine/src/trypGenerators/Gen_Circular.java</file>
-            <file>file:/F:/TrypGit/Tryptamine/src/trypComponents/IntegerPanel.java</file>
-            <file>file:/F:/TrypGit/Tryptamine/src/trypLayerPanels/CircularLayerPanel.java</file>
-            <file>file:/F:/TrypGit/Tryptamine/src/trypGUI/LayerEdit.java</file>
-            <file>file:/F:/TrypGit/Tryptamine/src/trypLayerPanels/AbstractLayerPanel.java</file>
+            <file>file:/F:/Tryptamine/src/trypGUI/LayerEdit.java</file>
+            <file>file:/F:/Tryptamine/src/trypGUI/PalEdit.java</file>
+            <file>file:/F:/Tryptamine/src/trypLayerPanels/FormulaLayerPanel.java</file>
+            <file>file:/F:/Tryptamine/src/tryptamine/GUIManager.java</file>
+            <file>file:/F:/Tryptamine/src/tryptamine/fileManager.java</file>
+            <file>file:/F:/Tryptamine/src/trypListModels/PaletteListModel.java</file>
+            <file>file:/F:/Tryptamine/src/trypListModels/LayerListModel.java</file>
+            <file>file:/F:/Tryptamine/src/tryptamine/ImageManager.java</file>
+            <file>file:/F:/Tryptamine/src/trypComponents/FormulaPresetBar.java</file>
+            <file>file:/F:/Tryptamine/src/trypGUI/Viewport.java</file>
+            <file>file:/F:/Tryptamine/src/tryptamine/DynamicCanvas.java</file>
+            <file>file:/F:/Tryptamine/src/tryptamine/CanvasWriter.java</file>
         </group>
     </open-files>
 </project-private>
