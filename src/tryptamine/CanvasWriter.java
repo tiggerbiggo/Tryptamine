@@ -1,9 +1,8 @@
 package tryptamine;
 
+import java.util.ArrayList;
 import trypGenerators.*;
-import trypParams.*;
-import trypResources.Formula;
-import trypResources.Function;
+import trypResources.Layer;
 
 public class CanvasWriter 
 {
@@ -18,15 +17,28 @@ public class CanvasWriter
     
     public static DynamicCanvas draw(DynamicCanvas DC, AbstractGenerator[] gens, int[] PaletteNums)
     {
-        if(gens != null && 
-                checkGenerators(gens) &&
-                PaletteNums != null &&
-                PaletteNums.length>=gens.length)
+        for(int i=0; i<gens.length; i++)
         {
-            for(int i=0; i<gens.length; i++)
+            try
             {
                 DC = gens[i].draw(DC, PaletteNums[0]);
             }
+            catch(Exception e){}
+        }
+        return DC;
+    }
+    
+    public static DynamicCanvas draw(DynamicCanvas DC, ArrayList<Layer> layers)
+    {
+        for(Layer L : layers)
+        {
+            try
+            {
+                int tmp = L.getPaletteNum();
+                if(tmp<=-1) tmp = 0;
+                DC = L.getGenerator().draw(DC, tmp);
+            }
+            catch(Exception e){}
         }
         return DC;
     }

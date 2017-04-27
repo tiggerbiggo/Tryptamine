@@ -1,7 +1,6 @@
 package trypComponents;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,7 +54,7 @@ public class FormulaPresetBar extends JPanel implements ActionListener, ChangeLi
         this.freq=0;
         this.selected=-1;
         
-        this.coCoeff = 1/25.0;
+        this.coCoeff = 1/15.0;
         this.freqEff = 1/100.0;
         
         setupFormulas();
@@ -150,7 +149,7 @@ public class FormulaPresetBar extends JPanel implements ActionListener, ChangeLi
             }
             AbstractGenerator[] gens = new AbstractGenerator[1];
             
-            gens[0] = new Gen_Formula(Gen_Formula.constructParams(true, true, 1, GapPresets.gaps[0], formulas.get(i)));
+            gens[0] = new Gen_Formula(Gen_Formula.constructParams(true, 1, GapPresets.gaps[0], formulas.get(i)));
             
             canvases.set(i, CanvasWriter.draw(canvases.get(i), gens, 0));
             
@@ -174,9 +173,7 @@ public class FormulaPresetBar extends JPanel implements ActionListener, ChangeLi
         try
         {
             F.setCoeff(coeff);
-            System.out.println("coeff: " + coeff);
             F.setFreq(freq);
-            System.out.println("freq: " + freq);
             F.setCoCoeff(coCoeff);
             F.setFreqEff(freqEff);
             F.setSelected(i);
@@ -206,7 +203,7 @@ public class FormulaPresetBar extends JPanel implements ActionListener, ChangeLi
         i++;
         formulas.add(F);
         
-        F = new Formula(Function.LOG, F, Operation.MULTIPLY);
+        F = new Formula(Function.SIN, F, Operation.MULTIPLY);
         F = setFValues(F, i);
         i++;
         formulas.add(F);

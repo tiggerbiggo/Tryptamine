@@ -12,18 +12,44 @@ public class Palette
 
     public Palette(int num, int id) 
     {
-        name = "New Palette";
+        
         this.num = num;
         this.index = id;
+        
+        name = "Palette " + id + " (" + num + ")";
         setAll(Color.BLACK);
     }
     
-    public Palette(int num, int id, String name) 
+    
+    public void setNum(int newNum)
+    {
+        if(newNum >=0)
+        {
+            Color[] tmp = new Color[newNum];
+            int i=0;
+            for(Color c : colorArray)
+            {
+                if(i<newNum)
+                {
+                    tmp[i] = c;
+                    i++;
+                }
+                else break;
+            }
+            num=newNum;
+            colorArray = tmp;
+        }
+        setName();
+    }
+    
+    public void setName()
+    {
+        name = "Palette " + index + " (" + num + ")";
+    }
+    
+    public void setName(String name)
     {
         this.name = name;
-        this.num = num;
-        this.index = id;
-        setAll(Color.BLACK);
     }
     
     public int getNum()
@@ -39,7 +65,7 @@ public class Palette
     
     public boolean setGradient(int start, int end, Color color1, Color color2)
     {
-        if(checkRange(start) && checkRange(end) && end>start)
+        if(checkRange(start) && checkRange(end) && end>=start)
         {
             //System.out.println("Start, End: "+start + ", " + end);
             int range;
@@ -50,6 +76,11 @@ public class Palette
             int[] c3 = new int[3];
             
             double d = 0;
+            
+            if(end-start == 0)
+            {
+                colorArray[start] = color1;
+            }
             
             for(int i=0; i<=end-start; i++)
             {
@@ -73,6 +104,24 @@ public class Palette
         else
         {
             return false;
+        }
+    }
+    
+    public void InvertColors(int startIndex, int endIndex)
+    {
+        if(checkRange(startIndex) && checkRange(endIndex) && startIndex<=endIndex)
+        {
+            for(int i=startIndex; i<=endIndex; i++)
+            {
+                try
+                {
+                    colorArray[i] = ColorTools.invert(colorArray[i]);
+                }
+                catch(Exception e)
+                {
+                    return;
+                }
+            }
         }
     }
     
@@ -116,11 +165,16 @@ public class Palette
     
     public Color getColor(int index)
     {
-        if(checkRange(index))
+        try
         {
             return colorArray[index];
         }
-        else return null;
+        catch(Exception e){return null;}
+    }
+    
+    public int getIndex()
+    {
+        return index;
     }
     
     public Color[] getColorArray()

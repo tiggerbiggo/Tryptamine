@@ -5,6 +5,8 @@
  */
 package trypLayerPanels;
 
+import java.awt.GridLayout;
+import javax.swing.JLabel;
 import trypParams.Parameter;
 
 /**
@@ -13,7 +15,8 @@ import trypParams.Parameter;
  */
 public class NullLayerPanel extends AbstractLayerPanel
 {
-
+    JLabel label;
+    
     @Override
     public Parameter[] getParams() 
     {
@@ -23,7 +26,9 @@ public class NullLayerPanel extends AbstractLayerPanel
     @Override
     public void initGUI() 
     {
-        
+        this.setLayout(new GridLayout(1,1));
+        label = new JLabel("No Layer Selected, or layer type null");
+        this.add(label);
     }
 
     @Override

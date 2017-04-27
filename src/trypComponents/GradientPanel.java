@@ -30,7 +30,7 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
 {
     JSlider[] sliders;
     JTextField[] fields;
-    JButton JB_Make, JB_SelectStart, JB_SelectEnd;
+    JButton JB_Make, JB_SelectStart, JB_SelectEnd, invertButton;
     
     int min, max;
     
@@ -77,6 +77,8 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         JB_SelectEnd = new JButton("Select End");
         JB_SelectEnd.addActionListener(A);
         
+        invertButton = new JButton("Invert Colors");
+        invertButton.addActionListener(A);
         
         c.gridx=0;
         c.gridy=0;
@@ -86,10 +88,10 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         
         c.gridx=2;
         c.gridy=0;
-        c.gridheight=2;
         this.add(JB_Make,c);
         
-        c.gridheight=1;
+        c.gridy=1;
+        this.add(invertButton, c);
         
         c.gridx=4;
         c.gridy=0;
@@ -130,13 +132,16 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
 
     public void setMax(int max)
     {
-        this.max=max;
-        
-        for(int i=0;i<=1;i++)
+        if(max>=0)
         {
-            fields[i].setText("0");
-            sliders[i].setValue(0);
-            sliders[i].setMaximum(max);
+            this.max=max;
+
+            for(int i=0;i<=1;i++)
+            {
+                fields[i].setText("0");
+                sliders[i].setValue(0);
+                sliders[i].setMaximum(max);
+            }
         }
     }
 
@@ -236,8 +241,11 @@ public class GradientPanel extends JPanel implements ActionListener, ChangeListe
         }
         else if(toCheck == JB_Make)
         {
-            
             return ActionCodes.CODE_GRADIENTPANEL_MAKE;
+        }
+        else if(toCheck == invertButton)
+        {
+            return ActionCodes.CODE_GRADIENTPANEL_INVERT;
         }
         return ActionCodes.NULLCODE;
     }

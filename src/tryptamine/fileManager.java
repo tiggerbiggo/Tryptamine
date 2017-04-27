@@ -81,7 +81,6 @@ public class fileManager
         }
         catch(Exception e)
         {
-            e.printStackTrace();
         }
     }
 }

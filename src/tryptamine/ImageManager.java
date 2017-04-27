@@ -45,16 +45,43 @@ public class ImageManager
     
     public static ArrayList<BufferedImage> constructSequence(DynamicCanvas DC)
     {
-        int pNum = DC.getPalette(0).getNum()-1;
-        
-        ArrayList<BufferedImage> ImageSequence = new ArrayList();
-        for(int o=0; o<=pNum; o++)
+        try
         {
-            
-            
-            ImageSequence.add(ImageManager.constructImage(DC, DC.getX(), DC.getY()));
-            DC.cycleAll(1);
+            int pNum = DC.getPalette(0).getNum()-1;
+
+            ArrayList<BufferedImage> ImageSequence = new ArrayList();
+            for(int o=0; o<=pNum; o++)
+            {
+
+
+                ImageSequence.add(ImageManager.constructImage(DC, DC.getX(), DC.getY()));
+                DC.cycleAll(1);
+            }
+            return ImageSequence;
         }
-        return ImageSequence;
+        catch(Exception e)
+        {
+            return null;
+        }
+    }
+    
+    public static ArrayList<BufferedImage> constructSequence(DynamicCanvas DC, int num)
+    {
+        try
+        {
+            ArrayList<BufferedImage> ImageSequence = new ArrayList();
+            for(int o=0; o<=num; o++)
+            {
+
+
+                ImageSequence.add(ImageManager.constructImage(DC, DC.getX(), DC.getY()));
+                DC.cycleAll(1);
+            }
+            return ImageSequence;
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
     }
 }

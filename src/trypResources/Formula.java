@@ -142,5 +142,4 @@ public class Formula
                 return 0;
         }
     }
-
 }

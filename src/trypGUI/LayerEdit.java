@@ -1,12 +1,11 @@
 package trypGUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,6 +23,7 @@ import trypLayerPanels.*;
 import trypListModels.LayerListModel;
 import trypParams.Parameter;
 import trypResources.Layer;
+import trypResources.Palette;
 
 public class LayerEdit implements ActionListener, ChangeListener, ListSelectionListener {
 
@@ -48,6 +48,8 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
     
     Layer currentLayer;
     int selectedIndex;
+    
+    ArrayList<Palette> palettes;
 
     public void initGUI(ActionListener A) {
         layerFrame = new JFrame("Layers");
@@ -78,6 +80,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         layerFrame.add(layerContainer);
         
         layerPanel = new NullLayerPanel();
+        layerPanel.initGUI();
         layerContainer.add(layerPanel);
 
         typeComboBox = new JComboBox(GenType.TYPENAMES);
@@ -89,6 +92,8 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         paletteComboBox.addActionListener(this);
         paletteComboBox.setBounds(300, 30, 200, 30);
         layerFrame.add(paletteComboBox);
+        
+        
 
         String[] buttonText = {"New", "Delete", "Save", "Cancel"};
         buttons = new JButton[4];
@@ -113,6 +118,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         layerList.setBounds(0, 0, 500, 1000);
         layerList.addListSelectionListener(this);
         layerScroll.add(layerList);
+        layerList.setSelectedIndex(selectedIndex);
         layerScroll.repaint();
     }
 
@@ -139,7 +145,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
             setAllEnabled(true);
             type = currentLayer.getType();
             typeComboBox.setSelectedIndex(type);
-            
+            paletteComboBox.setSelectedIndex(currentLayer.getPaletteNum());
         } 
         else 
         {
@@ -167,10 +173,26 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         layerFrame.repaint();
     }
 
+    public void setPalettes(ArrayList<Palette> palettes)
+    {
+        this.palettes = palettes;
+        paletteComboBox.removeAllItems();
+        for(Palette p : palettes)
+        {
+            paletteComboBox.addItem(p);
+        }
+        update();
+    }
+    
     public void updateType()
     {
         updateLayerPanel(typeComboBox.getSelectedIndex());
-        if(currentLayer != null) currentLayer.setType(typeComboBox.getSelectedIndex());
+        if(currentLayer != null) 
+        {
+            currentLayer.setType(typeComboBox.getSelectedIndex());
+            currentLayer.setName(GenType.TYPENAMES[typeComboBox.getSelectedIndex()]);
+            updateList();
+        }
     }
     
     public AbstractGenerator[] getGens()
@@ -183,6 +205,11 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
         }
         
         return toReturn;
+    }
+    
+    public ArrayList<Layer> getLayers()
+    {
+        return listModel.getList();
     }
     
     @Override
@@ -200,8 +227,8 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
                 switch(i)
                 {
                     case 0://add
-                        listModel.add(new Layer("New Layer"));
-                        updateList();
+                            listModel.add(new Layer("New Layer"));
+                            updateList();
                         break;
                     case 1://delete
                         if(selectedIndex!=-1)
@@ -217,6 +244,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
                         }
                         break;
                     case 3://cancel
+                        update();
                         break;
                 }
             }
@@ -231,6 +259,7 @@ public class LayerEdit implements ActionListener, ChangeListener, ListSelectionL
             try
             {
                 currentLayer.setParams(toCheck);
+                currentLayer.setPaletteNum(paletteComboBox.getSelectedIndex());
                 return true;
             }
             catch(Exception e){}

@@ -1,5 +1,6 @@
 package trypParams;
 
+import trypResources.CircleModes;
 import trypResources.Formula;
 
 /**
@@ -14,6 +15,7 @@ public final class Parameter
     int[] paramIntArray;
     Formula paramFormula;
     boolean paramBoolean;
+    CircleModes paramCircleMode;
     
     paramType type = paramType.NULL;
 
@@ -58,6 +60,14 @@ public final class Parameter
         type=paramType.INTARRAY;
     }
     
+    public Parameter(CircleModes paramCircleMode) 
+    {
+        setNull();
+        
+        this.paramCircleMode = paramCircleMode;
+        type=paramType.CIRCLEMODE;
+    }
+    
     public paramType getType()
     {
         return type;
@@ -88,7 +98,10 @@ public final class Parameter
         return paramIntArray;
     }
     
-    
+    public CircleModes getCircleMode()
+    {
+        return paramCircleMode;
+    }
     
     protected void setNull()
     {
@@ -96,6 +109,8 @@ public final class Parameter
         paramFormula = null;
         paramBoolean = false;
         paramInt = 0;
+        paramIntArray = null;
+        paramCircleMode = null;
         
         type = paramType.NULL;
     }

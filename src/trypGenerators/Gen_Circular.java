@@ -7,56 +7,15 @@ package trypGenerators;
 
 import trypParams.Parameter;
 import trypParams.paramType;
+import trypResources.CircleModes;
+import trypResources.Vector2;
 import tryptamine.DynamicCanvas;
 
-class Vector
-{
-    double x, y;
-    public Vector(double x, double y)
-    {
-        this.x=x;
-        this.y=y;
-    }
-    
-    public Vector add(Vector toAdd)
-    {
-        if(toAdd != null)
-        {
-            x+=toAdd.getX();
-            y+=toAdd.getY();
-        }
-        return this;
-    }
-    
-    public int getXInt()
-    {
-        return (int)Math.round(x);
-    }
-    
-    public int getYInt()
-    {
-        return (int)Math.round(y);
-    }
-    
-    public double getX()
-    {
-        return x;
-    }
-    
-    public double getY()
-    {
-        return y;
-    }
-}
-
-/**
- *
- * @author amnesia
- */
 public class Gen_Circular extends AbstractGenerator
 {
 
-    int r, x, y;
+    int r, x, y, colorOffset, colorSpeed;
+    CircleModes mode;
     
     public Gen_Circular(Parameter[] params)throws IllegalArgumentException
     {
@@ -72,66 +31,73 @@ public class Gen_Circular extends AbstractGenerator
     {
         for(int i=0; i<=r; i++)
         {
-            DC=drawCircle(DC, x, y, i, PaletteNum);
+            if(mode == CircleModes.FAN)
+            {
+                DC = drawFan(DC, x, y, i);
+            }
+            else if(mode == CircleModes.PULSE)
+            {
+                
+                DC=drawCircle(DC, x+1, y, i, PaletteNum, (i+colorOffset)*colorSpeed);
+                DC=drawCircle(DC, x, y+1, i, PaletteNum, (i+colorOffset)*colorSpeed);
+                DC=drawCircle(DC, x-1, y, i, PaletteNum, (i+colorOffset)*colorSpeed);
+                DC=drawCircle(DC, x, y-1, i, PaletteNum, (i+colorOffset)*colorSpeed);
+            }
+            
         }
         return DC;
     }
     
-    /**Very poorly written, old, don't use unless you want loads of unnecessary calculations
+    /**It's not actually that bad :/
      *
      * @param DC
+     * @param x
+     * @param y
      * @return
-     * @deprecated
      */
-    @Deprecated
-    public DynamicCanvas drawOld(DynamicCanvas DC)
+    public DynamicCanvas drawFan(DynamicCanvas DC, int x, int y, int r)
     {
         int H=DC.getX();
         int V=DC.getY();
         
-        Vector origin = new Vector(x, y);
-        Vector current, next;
-        
-        for(int i=0; i<=r; i++)
+        Vector2 origin = new Vector2(x, y);
+        Vector2 current;
+        Vector2 next;
+
+        double theta=0;
+        double delta;
+        do
         {
-            double theta=0;
-            double delta;
+            delta=0.05;
+            current = calcPosition(theta, r);
+            current.add(origin);
+            DC.draw(current.getXInt(), current.getYInt(), 0, DC.normalizePalette((int)Math.round(theta * colorSpeed), 0));
+            int steps=0;
             do
             {
-                delta=0.5;
-                current = calcPosition(theta, i);
-                current.add(origin);
-                DC.draw(current.getXInt(), current.getYInt(), 0, DC.normalizePalette((int)Math.round(theta), 0));
-                
-                
-                
-                int steps=0;
-                do
+                steps++;
+                theta+=delta;
+                next = calcPosition(theta, r);
+                next.add(origin);
+                if(calcDistance(current, next)<1)
                 {
-                    steps++;
-                    theta+=delta;
-                    next = calcPosition(theta, i);
-                    next.add(origin);
-                    if(calcDistance(current, next)<1)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        theta-=delta;
-                        delta/=2;
-                        theta+=delta;
-                    }
+                    break;
                 }
-                while(steps<10);
+                else
+                {
+                    theta-=delta;
+                    delta/=2;
+                    theta+=delta;
+                }
             }
-            while(theta<=360);
+            while(steps<10);
         }
-        
+        while(theta<=360);
+
         return DC;
     }
     
-    public DynamicCanvas drawCircle(DynamicCanvas DC, int x0, int y0, int radius, int PaletteNum)
+    public DynamicCanvas drawCircle(DynamicCanvas DC, int x0, int y0, int radius, int PaletteNum, int colorNum)
     {
         int x1=radius;
         int y1=0;
@@ -139,14 +105,15 @@ public class Gen_Circular extends AbstractGenerator
         int count=0;
         while(x1>=y1)
         {
-            DC.draw(x0+x1,y0+y1, PaletteNum, DC.normalizePalette(count/2, 0));
-            DC.draw(x0+y1,y0+x1, PaletteNum, DC.normalizePalette(count, 0));
-            DC.draw(x0-y1,y0+x1, PaletteNum, DC.normalizePalette(count/2, 0));
-            DC.draw(x0-x1,y0+y1, PaletteNum, DC.normalizePalette(count, 0));
-            DC.draw(x0-x1,y0-y1, PaletteNum, DC.normalizePalette(count/2, 0));
-            DC.draw(x0-y1,y0-x1, PaletteNum, DC.normalizePalette(count, 0));
-            DC.draw(x0+y1,y0-x1, PaletteNum, DC.normalizePalette(count/2, 0));
-            DC.draw(x0+x1,y0-y1, PaletteNum, DC.normalizePalette(count, 0));
+            
+            DC.draw(x0+x1,y0+y1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0+y1,y0+x1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0-y1,y0+x1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0-x1,y0+y1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0-x1,y0-y1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0-y1,y0-x1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0+y1,y0-x1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
+            DC.draw(x0+x1,y0-y1, PaletteNum, DC.normalizePalette(colorNum, PaletteNum));
             
             //System.out.println("Drew circle part " + count);
             
@@ -166,7 +133,7 @@ public class Gen_Circular extends AbstractGenerator
         return DC;
     }
     
-    private double calcDistance(Vector first, Vector second)
+    private double calcDistance(Vector2 first, Vector2 second)
     {
         double a = Math.abs(first.getX()-second.getX());
         double b = Math.abs(first.getY()-second.getY());
@@ -174,26 +141,40 @@ public class Gen_Circular extends AbstractGenerator
         return Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2)); //a^2+b^2=c^2, sqrt(a^2+b^2)=c
     }
     
-    private Vector calcPosition(double theta, int radius)
+    private Vector2 calcPosition(double theta, int radius)
     {
-        return new Vector(Math.cos(Math.toRadians(theta))*radius, Math.sin(Math.toRadians(theta))*radius);
+        return new Vector2(Math.cos(Math.toRadians(theta))*radius, Math.sin(Math.toRadians(theta))*radius);
     }
     
-    public static Parameter[] constructParams(int radius, int x, int y)
+    public static Parameter[] constructParams(
+            int radius, 
+            int x, int y, 
+            int colorOffset, 
+            int colorSpeed,
+            CircleModes mode)
     {
-        Parameter[] params = {new Parameter(radius), new Parameter(x), new Parameter(y)};
+        Parameter[] params = {
+            new Parameter(radius), 
+            new Parameter(x), 
+            new Parameter(y), 
+            new Parameter(colorOffset), 
+            new Parameter(colorSpeed), 
+            new Parameter(mode)};
         return params;
     }
     
     public final boolean parseParams(Parameter[] params)
     {
-        if(params != null && params.length == 3)
+        if(params != null && params.length == 6)
         {
             if(validateParams(params))
             {
                 r=params[0].getInt();
                 x=params[1].getInt();
                 y=params[2].getInt();
+                colorOffset = params[3].getInt();
+                colorSpeed = params[4].getInt();
+                mode = params[5].getCircleMode();
                 return true;
             }
         }
@@ -204,10 +185,13 @@ public class Gen_Circular extends AbstractGenerator
     public static boolean validateParams(Parameter[] params) 
     {
         return params != null &&
-               params.length==3 &&
+               params.length==6 &&
                params[0].getType()==paramType.INTEGER &&
                params[1].getType()==paramType.INTEGER &&
-               params[2].getType()==paramType.INTEGER;
+               params[2].getType()==paramType.INTEGER &&
+               params[3].getType()==paramType.INTEGER &&
+               params[4].getType()==paramType.INTEGER &&
+               params[5].getType()==paramType.CIRCLEMODE;
     }
 
     

@@ -8,6 +8,7 @@ package trypComponents;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -48,20 +49,14 @@ public class ColorBar extends JPanel
     {
         
         this.setVisible(true);
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        c.weightx =1;
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty=1;
+        this.setLayout(new GridLayout(1,0));
         
         buttons = new JButton[num];
         for(int i=0; i<num; i++)
         {
-            c.gridx=i;
             buttons[i] = new JButton(nullText);
             buttons[i].addActionListener(A);
-            this.add(buttons[i], c);
+            this.add(buttons[i]);
         }
     }
     
@@ -106,11 +101,21 @@ public class ColorBar extends JPanel
             else
             {
                 buttons[index].setBackground(Color.white);
+                buttons[index].setForeground(Color.black);
                 buttons[index].setText(nullText);
             }
         }
     }
     
+    public void reset()
+    {
+        int i=0;
+        for(JButton b : buttons)
+        {
+            setColor(i, null, 0);
+            i++;
+        }
+    }
     
     
 }

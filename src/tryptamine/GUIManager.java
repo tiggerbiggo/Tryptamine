@@ -28,7 +28,7 @@ public class GUIManager implements ActionListener {
     ArrayList<Palette> palettes;
     int[] paletteNums;
     
-    Layer[] layers;
+    ArrayList<Layer> layers;
     
     AbstractGenerator[] gens;
 
@@ -71,41 +71,11 @@ public class GUIManager implements ActionListener {
         
         DynamicCanvas DC = new DynamicCanvas(500, 500, palettes);
         
-        Formula F = new Formula(
-                Function.COS, 
-                new Formula(
-                        Function.SIN), 
-                Operation.ADD);
-        
-        F.setCoeff(10);
-        F.setFreq(0.02);
-        
-        F.getNext().setCoeff(8);
-        F.getNext().setFreq(0.1);
-        
-        //Parameter[][] params = {
-        //    Gen_Formula.constructParams(true, true, 1, gaps[0], F),
-        //    Gen_Formula.constructParams(true, false, 1, gaps[1], F),
-        //    Gen_Circular.constructParams(100, 250, 250)};
-        
-        //Generator[] gens = {
-        //    new Gen_Formula(params[0]),
-        //    new Gen_Formula(params[1]),
-        //    new Gen_Circular(params[2])};
-        
-        Parameter[][] params = {
-            Gen_Formula.constructParams(true, false, 1, GapPresets.gaps[0], F),
-            Gen_Formula.constructParams(true, true, 1, GapPresets.gaps[1], F),
-            Gen_DistortFormula.constructParams(false, false, GapPresets.gaps[0], F)};
-        
-        
         paletteNums = new int[3];
         
         paletteNums[0]=0;
         paletteNums[1]=1;
         paletteNums[2]=2;
-        
-        DC = CanvasWriter.draw(DC, gens, paletteNums);
         
         C.show();
         S.show();
@@ -117,14 +87,20 @@ public class GUIManager implements ActionListener {
         
         VP.show();
         
-        VP.setImages(drawPreview(VP, palettes, gens));
+        VP.setImages(drawPreview());
         
         do {
+            
+            updatePalettes();
+            updateLayers();
+            
             try 
             {
                 wait();
             } 
             catch (Exception e) {}
+            
+            
             
             switch (code) {
                 case ActionCodes.CODE_CONTROL_FORWARD:
@@ -139,7 +115,7 @@ public class GUIManager implements ActionListener {
                     if(S.checkFields())
                     {
                         DC.setDimensions(S.getResX(), S.getResY());
-                        DC = CanvasWriter.draw(DC, gens, paletteNums);
+                        DC = CanvasWriter.draw(DC, layers);
                         if(S.getGif())
                         {
                             fileManager.writeGif(ImageManager.constructSequence(DC), "Gifs/" + S.getFilename());
@@ -151,9 +127,7 @@ public class GUIManager implements ActionListener {
                     }
                     break;
                 case ActionCodes.CODE_VIEWPORT_REFRESH:
-                    updatePalettes();
-                    updateLayers();
-                    VP.setImages(drawPreview(VP, palettes, gens));
+                    VP.setImages(drawPreview());
                     break;
                     
             }
@@ -161,13 +135,22 @@ public class GUIManager implements ActionListener {
         } while (code >= 0);
     }
     
-    public ArrayList<BufferedImage> drawPreview(Viewport VP, ArrayList<Palette> P, AbstractGenerator[] gens)
+    public ArrayList<BufferedImage> drawPreview()
     {
-        return ImageManager.constructSequence(CanvasWriter.draw(new DynamicCanvas(
-                                VP.getWidth(), 
-                                VP.getHeight(), 
-                                P), 
-                        gens, paletteNums));
+        try
+        {
+            return ImageManager.constructSequence(
+                    CanvasWriter.draw(
+                            new DynamicCanvas(
+                                    VP.getWidth(), 
+                                    VP.getHeight(), 
+                                    palettes), 
+                            layers));
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
     }
 
     @Override
@@ -204,7 +187,8 @@ public class GUIManager implements ActionListener {
 
     private void updateLayers() 
     {
-        gens = LE.getGens();
+        layers = LE.getLayers();
+        LE.setPalettes(palettes);
     }
 
     

@@ -7,6 +7,7 @@ package trypLayerPanels;
 
 import java.awt.GridLayout;
 import trypComponents.*;
+import trypGenerators.Gen_DistortFormula;
 import trypGenerators.Gen_Formula;
 import trypParams.Parameter;
 import trypResources.Formula;
@@ -17,26 +18,26 @@ import tryptamine.GapPresets;
  *
  * @author root
  */
-public class FormulaLayerPanel extends AbstractLayerPanel
+public class DistortFormulaLayerPanel extends AbstractLayerPanel
 {
-    //hv, colorspeed, gaps, formula
+    //hv, dir, gaps, formula
     
     BooleanPanel boolHVPanel;
-    IntegerPanel colorSpeed;
+    BooleanPanel boolDirPanel;
     GapPanel gapPanel;
     FormulaPresetBar presets;
     
     @Override
     public Parameter[] getParams() 
     {
-        //hv, dir, colorspeed, gaps, formula
+        //hv, dir, gaps, formula
         try
         {
             Formula F = new Formula(Function.SIN);
             F.setCoeff(20);
-            return Gen_Formula.constructParams(
+            return Gen_DistortFormula.constructParams(
                     boolHVPanel.getBoolean(), 
-                    colorSpeed.getInt(), 
+                    boolDirPanel.getBoolean(), 
                     gapPanel.getGaps(), 
                     presets.getFormula());
         }
@@ -52,12 +53,15 @@ public class FormulaLayerPanel extends AbstractLayerPanel
         //
         this.setLayout(new GridLayout(0,1));
         
-        String[] labelNames = {"Horizontal", "Vertical"};
-        boolHVPanel = new BooleanPanel(labelNames);
+        String[][] labelNames = {
+            {"Horizontal", "Vertical"},
+            {"+", "-"}
+        };
+        boolHVPanel = new BooleanPanel(labelNames[0]);
         this.add(boolHVPanel);
         
-        colorSpeed = new IntegerPanel("Color Speed", true);
-        this.add(colorSpeed);
+        boolDirPanel = new BooleanPanel(labelNames[1]);
+        this.add(boolDirPanel);
         
         gapPanel = new GapPanel();
         this.add(gapPanel);
@@ -70,22 +74,19 @@ public class FormulaLayerPanel extends AbstractLayerPanel
     public void setParams(Parameter[] params) 
     {
         //hv, colorspeed, gaps, formula
-        if(Gen_Formula.validateParams(params))
+        if(Gen_DistortFormula.validateParams(params))
         {
             try
             {
                 boolHVPanel.setBoolean(params[0].getBoolean());
-                colorSpeed.setInt(params[1].getInt());
+                boolDirPanel.setBoolean(params[1].getBoolean());
                 gapPanel.setSelected(GapPresets.parseArray(params[2].getIntArray()));
                 double coeff = params[3].getFormula().getCoeff();
                 double freq = params[3].getFormula().getFreq();
                 int selected = params[3].getFormula().getSelected();
                 presets.setAll(coeff, freq, selected);
             }
-            catch(Exception e)
-            {
-                
-            }
+            catch(Exception e){}
         }
     }
     

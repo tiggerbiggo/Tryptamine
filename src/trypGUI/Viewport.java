@@ -51,7 +51,11 @@ public class Viewport implements ActionListener
     
     public void setImageIndex(int index) 
     {
-        currentImage = normalize(index, images.size());
+        try
+        {
+            currentImage = normalize(index, images.size());
+        }
+        catch(Exception e){}
         
     }
     

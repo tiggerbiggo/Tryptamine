@@ -64,9 +64,9 @@ public class GenType
             case FORMULA:
                 return new FormulaLayerPanel();
             case SIMPLELINES:
-                return new NullLayerPanel();
+                return new SimpleLinesLayerPanel();
             case DISTORTFORMULA:
-                return new NullLayerPanel();
+                return new DistortFormulaLayerPanel();
         }
         return new NullLayerPanel();
     }

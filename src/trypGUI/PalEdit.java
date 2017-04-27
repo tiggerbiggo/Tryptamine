@@ -1,6 +1,5 @@
 package trypGUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -40,12 +39,15 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     
     JPanel JP_EditPane;
     
-    JSlider JSL_ColorIndex;
+    JSlider colorIndexSlider;
+    JSlider colorNum;
     
     ColorBar CB;
     
     ColorPicker CP1;
     ColorPicker CP2;
+    
+    JButton swapColors;
     
     GradientPanel GP;
     
@@ -53,13 +55,13 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     
     int code, barPressed, barIndex, barSelected;
     
-    
     JList JL_PaletteList;
     
     PaletteListModel PLM = new PaletteListModel();
     
     public void initGUI(ActionListener A)
     {
+        
         JF_PalEdit = new JFrame("Palette Editor");
         JF_PalEdit.setLayout(null);//new GridBagLayout()
         JF_PalEdit.setBounds(10, 10, 1000, 500);
@@ -83,7 +85,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.weighty=0.1;
         c.gridx=0;
         c.gridy=0;
-        c.gridwidth=2;
+        c.gridwidth=3;
         c.gridheight=1;
         
         CB = new ColorBar(barNum, this);
@@ -94,16 +96,33 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.weighty=0.1;
         c.gridx=0;
         c.gridy=1;
-        c.gridwidth=2;
+        c.gridwidth=3;
         c.gridheight=1;
         
-        JSL_ColorIndex = new JSlider();
-        JSL_ColorIndex.setEnabled(false);
-        JSL_ColorIndex.addChangeListener(this);
-        JP_EditPane.add(JSL_ColorIndex, c);
+        colorIndexSlider = new JSlider();
+        colorIndexSlider.setEnabled(false);
+        colorIndexSlider.addChangeListener(this);
+        JP_EditPane.add(colorIndexSlider, c);
+        
+        c.fill=GridBagConstraints.BOTH;
+        c.weightx=1;
+        c.weighty=0.05;
+        c.gridx=0;
+        c.gridy=4;
+        c.gridwidth=3;
+        c.gridheight=1;
+        
+        colorNum = new JSlider(0,200);
+        colorNum.setEnabled(false);
+        colorNum.addChangeListener(this);
+        JP_EditPane.add(colorNum, c);
+        colorNum.createStandardLabels(10);
         
         CP1 = new ColorPicker(true, this);
         CP2 = new ColorPicker(false, this);
+        
+        swapColors = new JButton("<>");
+        swapColors.addActionListener(this);
         
         c.fill=GridBagConstraints.BOTH;
         c.weightx=1;
@@ -118,9 +137,19 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         JP_EditPane.add(CP1, c);
         
         c.fill=GridBagConstraints.BOTH;
-        c.weightx=1;
+        c.weightx=0.2;
         c.weighty=0.4;
         c.gridx=1;
+        c.gridy=2;
+        c.gridwidth=1;
+        c.gridheight=1;
+        
+        JP_EditPane.add(swapColors, c);
+        
+        c.fill=GridBagConstraints.BOTH;
+        c.weightx=1;
+        c.weighty=0.4;
+        c.gridx=2;
         c.gridy=2;
         c.gridwidth=1;
         c.gridheight=1;
@@ -136,7 +165,7 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
         c.weighty=0.1;
         c.gridx=0;
         c.gridy=3;
-        c.gridwidth=2;
+        c.gridwidth=3;
         c.gridheight=1;
         
         GP=new GradientPanel(this);
@@ -178,11 +207,18 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     
     public void updateColorBar()
     {
+        CB.reset();
         if(currentPalette != null)
         {
             for(int i=0; i<CB.getNum(); i++)
             {
-                CB.setColor(i, currentPalette.getColor(i+barIndex), i+barIndex);
+                Color tmp = currentPalette.getColor(i+barIndex);
+                CB.setColor(i, tmp, i+barIndex);
+                if(tmp == null && currentPalette.getNum()>i)
+                {
+                    CB.setText(i, "N");
+                }
+                
                 if(i+barIndex == barSelected)   CB.setText(i, "*"+barSelected+"*");
             }
         }
@@ -198,27 +234,36 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     public void updateCurrentPalette()
     {
         currentPalette = (Palette)PLM.getElementAt(JL_PaletteList.getSelectedIndex());
-        updateColorBar();
         if(currentPalette != null)
         {
             if(currentPalette.getNum()>CB.getNum())
             {
-                JSL_ColorIndex.setEnabled(true);
-                JSL_ColorIndex.setMinimum(0);
-                JSL_ColorIndex.setMaximum(currentPalette.getNum()-CB.getNum());
+                colorIndexSlider.setEnabled(true);
+                colorIndexSlider.setMinimum(0);
+                colorIndexSlider.setMaximum(currentPalette.getNum()-CB.getNum());
                 
                 
-                
-                GP.setAllEnabled(true);
-                GP.setMax(currentPalette.getNum()-1);
-                GP.updateFields();
             }
             else 
             {
-                JSL_ColorIndex.setEnabled(false);
+                colorIndexSlider.setEnabled(false);
+                
             }
-            JSL_ColorIndex.setValue(0);
+            GP.setAllEnabled(true);
+            GP.setMax(currentPalette.getNum()-1);
+            GP.setEnd(currentPalette.getNum()-1);
+            GP.updateFields();
+            colorIndexSlider.setValue(0);
+            colorNum.setEnabled(true);
+            colorNum.setValue(currentPalette.getNum());
         }
+        else
+        {
+            GP.setAllEnabled(false);
+            colorNum.setEnabled(false);
+            colorIndexSlider.setEnabled(false);
+        }
+        updateColorBar();
     }
     
     @Override
@@ -232,20 +277,38 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
             barPressed = tmp;
             barSelected=barPressed+barIndex;
             updateColorBar();
-            
-            
+            return;
         }
         
-        tmp = CP1.checkActions(toCheck);
-        if(tmp != ActionCodes.NULLCODE)
+        if(swapColors == toCheck)
         {
-            if(tmp == ActionCodes.CODE_COLORPICKER_BUTTON)
+            Color tmpC = CP1.getColor();
+            CP1.setColor(CP2.getColor());
+            CP2.setColor(tmpC);
+            return;
+        }
+        
+        tmp=CP1.checkActions(toCheck);
+        if(tmp==ActionCodes.CODE_COLORPICKER_BUTTON)
+        {
+            try
             {
-                
+                CP1.setColor(currentPalette.getColor(barSelected));
             }
+            catch(Exception ex){}
+            return;
         }
         
         tmp=CP2.checkActions(toCheck);
+        if(tmp==ActionCodes.CODE_COLORPICKER_BUTTON)
+        {
+            try
+            {
+                CP2.setColor(currentPalette.getColor(barSelected));
+            }
+            catch(Exception ex){}
+            return;
+        }
         
         tmp=GP.checkActions(toCheck);
         if(tmp != ActionCodes.NULLCODE)
@@ -265,12 +328,31 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
                     }
                     break;
                 case ActionCodes.CODE_GRADIENTPANEL_MAKE:
-                    currentPalette.setGradient(GP.getStart(), GP.getEnd(), CP1.getColor(), CP2.getColor());
+                    try
+                    {
+                        currentPalette.setGradient(GP.getStart(), GP.getEnd(), CP1.getColor(), CP2.getColor());
+                    }
+                    catch(Exception ex) {}
                     updateColorBar();
                     break;
+                case ActionCodes.CODE_GRADIENTPANEL_INVERT:
+                    currentPalette.InvertColors(GP.getStart(), GP.getEnd());
+                    updateColorBar();
                 
             }
         }
+    }
+    
+    public int updateNum()
+    {
+        ArrayList<Integer> nums = new ArrayList();
+        ArrayList<Palette> tmpList = PLM.getList();
+        for(Palette P : PLM.getList())
+        {
+            nums.add(P.getNum());
+        }
+        //Calculate LCM
+        return 0;
     }
 
     @Override
@@ -285,7 +367,21 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     @Override
     public void stateChanged(ChangeEvent e) 
     {
-        barIndex = JSL_ColorIndex.getValue();
+        Object toCheck = e.getSource();
+        if(colorNum == toCheck)
+        {
+            try
+            {
+                currentPalette.setNum(colorNum.getValue());
+                updateCurrentPalette();
+            }
+            catch(Exception ex) {}
+        }
+        else
+        {
+            barIndex = colorIndexSlider.getValue();
+        }
+        
         updateColorBar();
     }
     
@@ -293,5 +389,6 @@ public class PalEdit implements ActionListener, ListSelectionListener, ChangeLis
     {
         return PLM.getList();
     }
+
     
 }

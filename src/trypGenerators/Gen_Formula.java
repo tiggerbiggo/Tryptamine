@@ -13,7 +13,6 @@ public class Gen_Formula extends AbstractGenerator
 {
     
     boolean HV;
-    boolean dir;
     int colorSpeed;
     int[] gaps;
     Formula F;
@@ -36,8 +35,6 @@ public class Gen_Formula extends AbstractGenerator
         if(HV) maxPos = DC.getY();
         else maxPos = DC.getX();
         
-        
-        if(!dir) colorSpeed = Math.abs(colorSpeed)*-1; //Squished :)
         int n=0;
         int c=0;
         for(int i=0; i<maxPos; i++)
@@ -64,24 +61,23 @@ public class Gen_Formula extends AbstractGenerator
         return DC;
     }
     
-    public static Parameter[] constructParams(boolean HV, boolean dir, int colorSpeed, int[] gaps, Formula F)
+    public static Parameter[] constructParams(boolean HV, int colorSpeed, int[] gaps, Formula F)
     {
-        Parameter[] params = {new Parameter(HV), new Parameter(dir), new Parameter(colorSpeed), new Parameter(gaps), new Parameter(F)};
+        Parameter[] params = {new Parameter(HV), new Parameter(colorSpeed), new Parameter(gaps), new Parameter(F)};
         
         return params;
     }
     
     public final boolean parseParams(Parameter[] params)
     {
-        if(params != null && params.length == 5)
+        if(params != null && params.length == 4)
         {
             if(validateParams(params))
             {
                 HV=params[0].getBoolean();
-                dir=params[1].getBoolean();
-                colorSpeed = params[2].getInt();
-                gaps=params[3].getIntArray();
-                F=params[4].getFormula();
+                colorSpeed = params[1].getInt();
+                gaps=params[2].getIntArray();
+                F=params[3].getFormula();
                 return true;
             }
         }
@@ -92,12 +88,11 @@ public class Gen_Formula extends AbstractGenerator
     public static boolean validateParams(Parameter[] params) 
     {
         return params != null &&
-                params.length==5 &&
+                params.length==4 &&
                 params[0].getType()==paramType.BOOLEAN && 
-                params[1].getType()==paramType.BOOLEAN && 
-                params[2].getType()==paramType.INTEGER &&
-                params[3].getType()==paramType.INTARRAY &&
-                params[4].getType()==paramType.FORMULA;
+                params[1].getType()==paramType.INTEGER &&
+                params[2].getType()==paramType.INTARRAY &&
+                params[3].getType()==paramType.FORMULA;
     }
     
 }

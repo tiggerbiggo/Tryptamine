@@ -1,52 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trypLayerPanels;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import javax.swing.JComboBox;
 import trypComponents.IntegerPanel;
 import trypGenerators.Gen_Circular;
 import trypParams.Parameter;
+import trypResources.CircleModes;
 
-/**
- *
- * @author amnesia
- */
+
 public class CircularLayerPanel extends AbstractLayerPanel
 {
     IntegerPanel[] intPanels;
+    JComboBox modes;
+    int panelNum;
     
     @Override
     public void initGUI()
     {
+        this.setLayout(new GridLayout(0,2));
         
-        
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        
-        c.weightx=1;
-        c.weighty=1;
-        c.fill=GridBagConstraints.BOTH;
-        
-        intPanels = new IntegerPanel[3];
-        String[] panelTexts = {"Radius", "X", "Y"};
-        for(int i=0;i<=2;i++)
+        panelNum = 5;
+        intPanels = new IntegerPanel[panelNum];
+        String[] panelTexts = {"Radius", "X", "Y", "Color Offset", "Color Speed"};
+        boolean[] canBeNegative = {false, true, true, true, true};
+        for(int i=0;i<=panelNum-1;i++)
         {
-            c.gridy=i;
-            intPanels[i]=new IntegerPanel(panelTexts[i], false);
-            this.add(intPanels[i], c);
+            intPanels[i]=new IntegerPanel(panelTexts[i], canBeNegative[i]);
+            this.add(intPanels[i]);
         }
+        
+        modes = new JComboBox(CircleModes.values());
+        this.add(modes);
     }
     
     @Override
     public Parameter[] getParams() 
     {
-        int[] tempArray = new int[3];
-        for(int i=0;i<3;i++)
+        int[] tempArray = new int[panelNum];
+        for(int i=0;i<panelNum;i++)
         {
             try
             {
@@ -54,13 +45,17 @@ public class CircularLayerPanel extends AbstractLayerPanel
             }
             catch(Exception e)
             {
+                System.out.println("oops");
                 return null;
             }
         }
         return Gen_Circular.constructParams(
                 tempArray[0], 
                 tempArray[1], 
-                tempArray[2]);
+                tempArray[2],
+                tempArray[3],
+                tempArray[4],
+                CircleModes.values()[modes.getSelectedIndex()]);
     }
 
     @Override
@@ -68,9 +63,18 @@ public class CircularLayerPanel extends AbstractLayerPanel
     {
         if(Gen_Circular.validateParams(params))
         {
-            for(int i=0; i<=2; i++)
+            for(int i=0; i<panelNum; i++)
             {
                 intPanels[i].setInt(params[i].getInt());
+            }
+            CircleModes[] values = CircleModes.values();
+            for(int i=0; i<values.length; i++)
+            {
+                if(values[i] == params[panelNum].getCircleMode())
+                {
+                    modes.setSelectedIndex(i);
+                    break;
+                }
             }
         }
     }

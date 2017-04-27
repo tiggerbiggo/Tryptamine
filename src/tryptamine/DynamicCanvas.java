@@ -170,7 +170,9 @@ public class DynamicCanvas
         {
             PR[x][y]=new PaletteReference(colorIndex, paletteIndex);
         }
-        catch(Exception e){}
+        catch(Exception e)
+        {
+        }
     }
     
     public void setReference(int x, int y, PaletteReference ref)

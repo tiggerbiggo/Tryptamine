@@ -19,19 +19,20 @@ public class Layer
     Parameter[] params;
     int type;
     String name;
+    int paletteNum;
 
     public Layer(String name)
     {
         this.type=GenType.NULL;
         this.name=name;
+        paletteNum = -1;
     }
     
     public Layer(String name, int type) 
     {
         this.type = type;
-        params = null;
-        gen = null;
-        this.name=name;
+        this.name = name;
+        paletteNum = -1;
     }
     
     
@@ -41,6 +42,7 @@ public class Layer
         this.type = type;
         setParams(params);
         this.name=name;
+        paletteNum = -1;
     }
     
     public int getType()
@@ -54,6 +56,22 @@ public class Layer
         {
             this.type=type;
         }
+    }
+    
+    public void setName(String name)
+    {
+        if(name != null)
+            this.name=name;
+    }
+    
+    public void setPaletteNum(int num)
+    {
+        paletteNum = num;
+    }
+    
+    public int getPaletteNum()
+    {
+        return paletteNum;
     }
     
     public Parameter[] getParams()

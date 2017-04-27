@@ -1,62 +1,65 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trypGUI;
 
-import java.awt.Insets;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import trypResources.ActionCodes;
 
-/**
+/**A window to allow the user to control the frames in the animation
  *
- * @author amnesia
+ * @author tiggerbiggo
  */
 public class Controls implements ActionListener
 {
     
-    JFrame JF_Controls = new JFrame("Controls");
-    JButton JB_Forward = new JButton(">");
-    JButton JB_Backward = new JButton("<");
+    JFrame controlFrame;
+    JButton forward;
+    JButton playPause;
+    JButton back;
     
     public void initGUI(ActionListener A)
     {
-        JF_Controls.setLayout(null);
-        JF_Controls.setBounds(10, 10, 500, 500);
-        JF_Controls.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JF_Controls.setResizable(false);
-        JF_Controls.setLocationRelativeTo(null);
-        JF_Controls.setVisible(false);
+        controlFrame = new JFrame("Controls");
+        controlFrame.setLayout(new GridLayout(1,0));
+        controlFrame.setBounds(10, 10, 300, 200);
+        controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        controlFrame.setResizable(false);
+        controlFrame.setLocationRelativeTo(null);
+        controlFrame.setVisible(false);
 
-        JB_Forward.setBounds(60, 10, 40, 40);
-        JB_Forward.setMargin(new Insets(0, 0, 0, 0));
-        JB_Forward.addActionListener(A);
-        JF_Controls.add(JB_Forward);
+        back = new JButton("<");
+        back.addActionListener(A);
+        controlFrame.add(back);
         
-        JB_Backward.setBounds(10, 10, 40, 40);
-        JB_Backward.setMargin(new Insets(0, 0, 0, 0));
-        JB_Backward.addActionListener(A);
-        JF_Controls.add(JB_Backward);
+        playPause = new JButton("Play");
+        playPause.addActionListener(A);
+        controlFrame.add(playPause);
+        
+        forward = new JButton(">");
+        forward.addActionListener(A);
+        controlFrame.add(forward);
     }
     
     public int checkActions(Object toCheck)
     {
-        if(toCheck == JB_Forward) 
+        if(toCheck == forward) 
         {
             return ActionCodes.CODE_CONTROL_FORWARD;
         }
-        else if (toCheck == JB_Backward) 
+        else if (toCheck == back) 
         {
             return ActionCodes.CODE_CONTROL_BACKWARD;
+        }
+        else if (toCheck == playPause) 
+        {
+            return ActionCodes.CODE_CONTROL_PLAYPAUSE;
         }
         else return ActionCodes.NULLCODE;
     }
     
     public void show()
     {
-        JF_Controls.setVisible(true);
+        controlFrame.setVisible(true);
     }
 
     @Override

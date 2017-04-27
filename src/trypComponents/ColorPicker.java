@@ -98,6 +98,23 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
         return C;
     }
     
+    public void setColor(Color C)
+    {
+        try
+        {
+            sliders[0].setValue(C.getRed());
+            sliders[1].setValue(C.getGreen());
+            sliders[2].setValue(C.getBlue());
+            
+            fields[0].setText("" + C.getRed());
+            fields[1].setText("" + C.getGreen());
+            fields[2].setText("" + C.getBlue());
+            
+            this.C = C;
+        }
+        catch(Exception e){}
+    }
+    
     public void parseFields()
     {
         for(int i=0; i<=2; i++)
@@ -149,7 +166,6 @@ public class ColorPicker extends JPanel implements FocusListener, ChangeListener
             if(toCheck == sliders[i])
             {
                 fields[i].setText(""+sliders[i].getValue());
-                
             }
         }
         updateColor();

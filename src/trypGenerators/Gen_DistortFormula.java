@@ -5,6 +5,7 @@
  */
 package trypGenerators;
 
+import java.util.ArrayList;
 import trypParams.Parameter;
 import trypParams.paramType;
 import trypResources.Formula;
@@ -42,7 +43,7 @@ public class Gen_DistortFormula extends AbstractGenerator
         for(int i=0; i<maxPos; i++)
         {
             startPos=(int)Math.round(F.recursiveCalc(i));
-            if(!dir)startPos*=-1;
+            //if(!dir)startPos*=-1;
             if(n>=gaps.length)
             {
                 n=0;
@@ -64,6 +65,77 @@ public class Gen_DistortFormula extends AbstractGenerator
     }
     
     public DynamicCanvas shiftLine(DynamicCanvas DC, boolean HV, int num, int pos)
+    {
+        if(num==0) return DC;
+        
+        System.out.println("Noreturn: " + num);
+        
+        int max, dx, dy, cx, cy, n;
+        
+        ArrayList<PaletteReference> listA = new ArrayList();
+        ArrayList<PaletteReference> listB = new ArrayList();
+        
+        if(HV) 
+        {
+            max=DC.getX();
+            dx=Integer.signum(num);
+            dy=0;
+            cx=0;
+            cy=pos;
+        }
+        else 
+        {
+            max=DC.getY();
+            dx=0;
+            dy=Integer.signum(num);
+            cx=pos;
+            cy=0;
+        }
+        
+        for(int i=0; i<max; i++)
+        {
+            listA.add(DC.getReference(cx, cy));
+            cx+=dx;
+            cy+=dy;
+        }
+        
+        if(HV) 
+        {
+            if(num<0) 
+            {
+                //dx=1;
+                cx=max;
+            }
+            else cx=0;
+            cy=pos;
+        }
+        else 
+        {
+            cx=pos;
+            if(num<0)
+            {
+                //dy*=-1;
+                cy=max;
+            }
+            else cy = 0;
+            cy=0;
+            
+        }
+        
+        
+        
+        
+        for(int i=0; i<listA.size(); i++)
+        {
+            DC.setReference(cx, cy, listA.get(normalize(i+num, 0,listA.size())));
+            cx+=dx;
+            cy+=dy;
+        }
+        
+        return DC;
+    }
+    
+    public DynamicCanvas shiftLineOtherOld(DynamicCanvas DC, boolean HV, int num, int pos)
     {
         int max, dx, dy, cx, cy, n;
         PaletteReference[] RefArray;
